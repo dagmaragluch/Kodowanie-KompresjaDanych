@@ -71,18 +71,17 @@ public class RabinKarpAlgorithm {
         }
 
         if (oldPosition != null) {
-            return new Tuple(oldPosition, lengthOfFoundPattern);
+            return new Tuple(oldPosition, lengthOfFoundPattern);  //(i, j)
         } else {
-            return new Tuple(lengthOfFoundPattern, wholePattern.charAt(0));
+            return new Tuple(lengthOfFoundPattern, wholePattern.charAt(0));  //(0, letter_code)
         }
-
     }
 
 
     public static void main(String[] args) {
-        String txt = "AGET GEE-WSBGEEKreada";
-        String pat = "2GET";
-        searchAll(pat, txt);
+        String txt = "wwwab";
+        String pat = "ba-w";
+        Tuple t = searchAll(pat, txt);
     }
 
 

@@ -1,12 +1,9 @@
 import java.util.ArrayList;
 
-public class Algorithm_LZ77 {
+public class Encoding_LZ77 {
 
-//    int k = 255;
-//    int n = 256;
-
-    int k = 7;
-    int n = 8;
+    private final int k = 255;
+    private final int n = 256;
 
     StringBuilder dictionaryBuffer = new StringBuilder(k);
     StringBuilder encodingBuffer = new StringBuilder(n);
@@ -14,16 +11,15 @@ public class Algorithm_LZ77 {
     ArrayList<Tuple> encodedText = new ArrayList<>();
 
 
-    public void encoding(String textToEncoding) {
+    public ArrayList<Tuple> encoding(String textToEncoding) {
 
-     initBuffers(textToEncoding);
+        initBuffers(textToEncoding);
 
         while (encodingBuffer.length() != 0) {
             Tuple encodedTuple = oneStepOfEncoding();
             encodedText.add(encodedTuple);
         }
-
-
+        return encodedText;
     }
 
 
@@ -33,14 +29,12 @@ public class Algorithm_LZ77 {
 
         Tuple tupleToCheck = RabinKarpAlgorithm.searchAll(ourPattern, dictionary);
 
-        if ((Integer) tupleToCheck.getFirst() == 0) {
+        if (tupleToCheck.getSecond() instanceof Character) {         //(0, letter_code)
             updateBuffers(1);
-        } else {
+        } else {                                            //(i, j)
             int c = (int) tupleToCheck.getSecond();
             updateBuffers(c);
         }
-
-        System.out.println("first = " + tupleToCheck.getFirst().toString() + "   second = " + tupleToCheck.getSecond().toString());
         return tupleToCheck;
     }
 
@@ -48,15 +42,20 @@ public class Algorithm_LZ77 {
     public void initBuffers(String textToEncoding) {
         dictionaryBuffer.append(String.valueOf(textToEncoding.charAt(0)).repeat(Math.max(0, dictionaryBuffer.capacity())));
 
-        for (int i = 0; i < encodingBuffer.capacity(); i++)
+//        dodatkowy warunek w pętli for, bo może zdażyć się sytuacja,
+//        gdy długość tekstu do zakodawania jest mniejsza od długości bufora
+        for (int i = 0; i < encodingBuffer.capacity() && i < textToEncoding.length() - 1; i++) {
             encodingBuffer.append(textToEncoding.charAt(i + 1));
+
+        }
 
         bigBuffer.append(dictionaryBuffer);
         bigBuffer.append(encodingBuffer);
-        bigBuffer.append(textToEncoding.substring(n));
+        if (n + 1 < textToEncoding.length()) {
+            bigBuffer.append(textToEncoding.substring(n + 1));
+        }
 
         encodedText.add(new Tuple(0, textToEncoding.charAt(0)));
-
     }
 
     public void updateBuffers(int j) {

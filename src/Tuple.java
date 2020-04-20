@@ -1,10 +1,10 @@
 public class Tuple<First, Second> {
 
-    private First first;
-    private Second second;
+    private final First first;
+    private final Second second;
 
 
-    public Tuple(First first, Second second){
+    public Tuple(First first, Second second) {
         this.first = first;
         this.second = second;
     }
@@ -13,15 +13,11 @@ public class Tuple<First, Second> {
         return first;
     }
 
-    public void setFirst(First first) {
-        this.first = first;
-    }
-
     public Second getSecond() {
         return second;
     }
 
-    public void setSecond(Second second) {
-        this.second = second;
+    public static void printTuple(Tuple tuple) {
+        System.out.println("(" + tuple.getFirst().toString() + ", " + tuple.getSecond().toString() + ")");
     }
 }
