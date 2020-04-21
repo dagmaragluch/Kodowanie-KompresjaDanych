@@ -1,6 +1,14 @@
+package lista3;
+
+import lista1.Converter;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Encoding_LZ77 {
+
+    Converter converter = new Converter();
 
     private final int k = 255;
     private final int n = 256;
@@ -11,7 +19,7 @@ public class Encoding_LZ77 {
     ArrayList<Tuple> encodedText = new ArrayList<>();
 
 
-    public ArrayList<Tuple> encoding(String textToEncoding) {
+    public ArrayList<Tuple> encoding(String textToEncoding, String fileName) throws IOException {
 
         initBuffers(textToEncoding);
 
@@ -19,6 +27,8 @@ public class Encoding_LZ77 {
             Tuple encodedTuple = oneStepOfEncoding();
             encodedText.add(encodedTuple);
         }
+
+        getValuesDescribingTheCompression(textToEncoding, fileName);
         return encodedText;
     }
 
@@ -67,6 +77,33 @@ public class Encoding_LZ77 {
             encodingBuffer = new StringBuilder(bigBuffer.substring(j + k));
         }
         bigBuffer = new StringBuilder(bigBuffer.substring(j));
+    }
+
+
+    public void getValuesDescribingTheCompression(String textToEncoding, String fileName) throws IOException {
+        System.out.println("Wartości opisujące kompresję:");
+
+        //długość kodowanego pliku
+        int lengthOfTextToEncoding = textToEncoding.length();
+        System.out.println("długość kodowanego pliku: " + lengthOfTextToEncoding);
+
+        //długość uzyskanego kodu
+        int lengthOfCode = encodedText.size();
+        System.out.println("długość uzyskanego kodu: " + lengthOfCode);
+
+        //stopień kompresji = dł przed skompresowaniem/dł po skompresowaniu
+        System.out.println("stopień kompresji: " + (float) lengthOfTextToEncoding / lengthOfCode);
+
+        //entropia kodowanego tekstu
+        byte[] byteArray = converter.convertFileToByteArray(fileName);
+        HashMap<Byte, Float> mapOfText = converter.getCzestosc(byteArray);
+        double textEntropy = converter.calculatingEntropy1(mapOfText);
+        System.out.println("entropia kodowanego tekstu: " + textEntropy);
+
+        //entropia uzyskanego kodu
+        HashMap<Tuple, Float> mapOfCode = converter.getCzestoscWarunkowa(encodedText);
+        double codeEntropy = converter.calculatingEntropy2(mapOfCode);
+        System.out.println("entropia uzyskanego kodu: " + codeEntropy);
     }
 
 

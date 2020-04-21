@@ -1,6 +1,10 @@
+package lista3;
+
+//implemantacja algorytmu wyszukiwania wzorca Rabina-Karpa ze strony geeksforgeeks.org
+//(odpowiednio dostosowana przeze mnie do potrzeb zadania)
+
 public class RabinKarpAlgorithm {
 
-    // d is the number of characters in the input alphabet
     public final static int d = 256;
 
     static Integer search(String pattern, String text) {
@@ -78,11 +82,10 @@ public class RabinKarpAlgorithm {
     }
 
 
-    public static void main(String[] args) {
-        String txt = "wwwab";
-        String pat = "ba-w";
-        Tuple t = searchAll(pat, txt);
-    }
-
+//    public static void main(String[] args) {
+//        String txt = "wwwab";
+//        String pat = "ba-w";
+//        Tuple t = searchAll(pat, txt);
+//    }
 
 }

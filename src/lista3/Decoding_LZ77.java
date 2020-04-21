@@ -1,4 +1,9 @@
+package lista3;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Decoding_LZ77 {
 
@@ -17,7 +22,8 @@ public class Decoding_LZ77 {
             oneStepOfDecoding(encodedText.get(i));
         }
 
-        System.out.println(outputBuffer.toString());
+        writeDecodedTextToFile(outputBuffer);
+//        System.out.println(outputBuffer.toString());
     }
 
 
@@ -45,6 +51,26 @@ public class Decoding_LZ77 {
             dictionaryBuffer = new StringBuilder(dictionaryBuffer.substring(c) + newLetters);
         }
         outputBuffer.append(newLetters);
+    }
+
+    public void writeDecodedTextToFile(StringBuilder output) {
+
+        try {
+            File myObj = new File("decodedText.txt");
+            myObj.createNewFile();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter myWriter = new FileWriter("decodedText.txt");
+            myWriter.write(output.toString());
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred");
+            e.printStackTrace();
+        }
 
     }
 
