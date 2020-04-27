@@ -1,7 +1,3 @@
-package lista3;
-
-import lista1.Converter;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

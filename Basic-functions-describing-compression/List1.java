@@ -1,7 +1,3 @@
-package lista1;
-
-import lista3.Tuple;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

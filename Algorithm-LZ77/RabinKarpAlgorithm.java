@@ -1,5 +1,3 @@
-package lista3;
-
 //implemantacja algorytmu wyszukiwania wzorca Rabina-Karpa ze strony geeksforgeeks.org
 //(odpowiednio dostosowana przeze mnie do potrzeb zadania)
 

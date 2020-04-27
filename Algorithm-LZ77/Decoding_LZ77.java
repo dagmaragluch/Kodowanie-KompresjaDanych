@@ -1,5 +1,3 @@
-package lista3;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.io.FileWriter;
