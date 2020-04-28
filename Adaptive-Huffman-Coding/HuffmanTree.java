@@ -7,10 +7,11 @@ public class HuffmanTree {
     public final int n = 256;   //number of letters in the our alphabet (8-bits strings of ASCII codes)
     public final int Z = 2 * n - 1;   //max number of nodes
     public int actualHighestIndex = Z;
+    public StringBuilder codeNYT = new StringBuilder();
 
     private List<Node> nodes = new ArrayList<>();
     private Map<Integer, Node> nodeByIndex = new HashMap<>();
-    private Map<Integer, Node> leafs = new HashMap<>();
+    private Map<Character, Node> leafs = new HashMap<>();
 
     //init HuffmanTree
     public HuffmanTree() {
@@ -21,10 +22,9 @@ public class HuffmanTree {
         nodeByIndex.put(root.getIndex(), root);
     }
 
-    public void insertIntoTree(int value) {
-
+    public void insertIntoTree(char value) {
         //first occurrence of value
-        if (!leafs.containsKey(value)) {
+        if (!isValueInTree(value)) {
             insertNewValue(value);
         }
         //value is already in Tree
@@ -33,7 +33,7 @@ public class HuffmanTree {
         }
     }
 
-    public Node insertNewValue(int value) {
+    public Node insertNewValue(char value) {
 
         int oldIndex = NYT.getIndex();
 
@@ -62,7 +62,7 @@ public class HuffmanTree {
     }
 
 
-    public Node insertOldValue(int value) {
+    public Node insertOldValue(char value) {
         Node leafToUpdate = leafs.get(value);
         leafToUpdate.increaseWeight();
         updateParentChain(leafToUpdate);
@@ -75,9 +75,7 @@ public class HuffmanTree {
         sortNodesByIndex();
         while (node != root) {
             Node nodeToSwap = isConflictWithNode(node);
-            System.out.println("Before " + isConflictWithNode(node));
             if (nodeToSwap != null) {
-                System.out.println("OK " + nodeToSwap.getIndex());
                 swapNodes(nodeToSwap, node);
 
             }
@@ -128,17 +126,12 @@ public class HuffmanTree {
         } else {
             oldParent.leftChild = newNodePosition;
         }
-        // Update the parent pointers.
+
+        // Update the parent pointers and index
         oldNodeGettingSwapped.parent = newParent;
         newNodePosition.parent = oldParent;
         oldNodeGettingSwapped.setIndex(newIndex);
         newNodePosition.setIndex(oldIndex);
-
-
-        // Swap the indices of the nodes in order arraylist.
-//        order.set(newIndex, oldNodeGettingSwapped);
-//        order.set(oldIndex, newNodePosition);
-//        updateNodeIndices();
     }
 
 
@@ -155,13 +148,8 @@ public class HuffmanTree {
     }
 
 
-    public boolean isValueInTree(int value) {
-        for (Node n : nodes) {
-            if (n.getValue() == value) {
-                return true;
-            }
-        }
-        return false;
+    public boolean isValueInTree(char value) {
+        return leafs.containsKey(value);
     }
 
     public void updateParentChain(Node newLeaf) {
@@ -195,6 +183,58 @@ public class HuffmanTree {
             if (n.nodeType == Node.NodeType.INTERNAL)
                 n.setWeight(n.leftChild.getWeight() + n.rightChild.getWeight());
         }
+    }
+
+    /***********************/
+
+    public String generateOriginSymbolCode(char symbol) {
+        return String.format("%08d", Integer.parseInt(Integer.toBinaryString(symbol)));
+//        return Integer.toBinaryString(symbol);
+    }
+
+    public char getSymbolFromASCIICode(String codeASCII) {
+        int decimalValueOfSymbol = Integer.parseInt(codeASCII, 2);    //get decimal value
+        return (char) decimalValueOfSymbol;
+    }
+
+    public String generateEncodingSymbolCode(char symbol) {
+        Node actualNode = leafs.get(symbol);
+        Node parent;
+        StringBuilder encodingSymbolCode = new StringBuilder();
+
+        while (actualNode.parent != null) {
+            parent = actualNode.parent;
+            if (parent.leftChild == actualNode) {
+                encodingSymbolCode.append(0);
+            } else {
+                encodingSymbolCode.append(1);
+            }
+            actualNode = parent;
+        }
+        encodingSymbolCode.reverse();
+
+        return encodingSymbolCode.toString();
+    }
+
+    public String generateCodeNYT() {
+        String codeNYTstr = codeNYT.toString();
+        codeNYT.append("0");
+        return codeNYTstr;
+    }
+
+    public String getCodeNYT() {
+        return codeNYT.toString();
+    }
+
+    public boolean isEmpty() {
+        return root == NYT;
+    }
+
+
+    public char getDecodingSymbol(String code) {
+
+
+        return 'a';
     }
 
 

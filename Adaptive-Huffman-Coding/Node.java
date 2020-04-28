@@ -6,21 +6,18 @@ public class Node {
     public Node parent;
     private int weight;
     private int index;
-    private int value;
+    private char value;
 
     public enum NodeType {
         NYT,
         LEAF,
-        INTERNAL,
-        ROOT
+        INTERNAL
     }
 
 
     //internal Node
     public Node(Node parent, Node leftChild, Node rightChild, int weight, int index) {
         this.parent = parent;
-//        this.leftChild = leftChild;
-//        this.rightChild = rightChild;
         this.weight = weight;
         this.index = index;
         this.nodeType = NodeType.INTERNAL;
@@ -35,24 +32,13 @@ public class Node {
     }
 
     //Leaf Node
-    public Node(Node parent, int index, int value) {
+    public Node(Node parent, int index, char value) {
         this.parent = parent;
         this.weight = 1;
         this.index = index;
         this.value = value;
         this.nodeType = NodeType.LEAF;
     }
-
-//    //Root Node
-//    public Node(Node leftChild, Node rightChild, int weight, int index) {
-//        this.parent = null;
-//        this.leftChild = leftChild;
-//        this.rightChild = rightChild;
-//        this.weight = weight;
-//        this.index = index;
-//        this.nodeType = NodeType.ROOT;
-//    }
-
 
     public void setNodeType(NodeType nodeType) {
         this.nodeType = nodeType;
@@ -78,7 +64,7 @@ public class Node {
         return index;
     }
 
-    public int getValue() {
+    public char getValue() {
         return value;
     }
 
@@ -90,7 +76,7 @@ public class Node {
         this.weight = weight;
     }
 
-    public void setValue(int value) {
+    public void setValue(char value) {
         this.value = value;
     }
 
@@ -114,8 +100,6 @@ public class Node {
                     return "NYT: index: " + this.index + " weight: " + this.weight;
             case INTERNAL:
                 return "INTERNAL: index: " + this.index + " weight: " + this.weight;    // + " parent: " + (this.parent != null ? this.parent.getIndex() : "NULL") + " left: " + this.leftChild.getIndex() + " right: " + this.rightChild.getIndex();
-            case ROOT:
-                return "ROOT: index: " + this.index + " weight: " + this.weight;    // + " left: " + this.leftChild.getIndex() + " right: " + this.rightChild.getIndex();
             default:
                 throw new IllegalStateException("Unexpected value: " + this.nodeType);
         }
