@@ -6,8 +6,8 @@ public class Decoder {
 
         HuffmanTree huffmanTree = new HuffmanTree();
 
-        String text = "01000001001000010101";
-//        String text = "010000010010000100001000011";
+        String text = "0100010000100000100010001110000100110110000001010010110000000100000100111011000000010010010";
+
         StringBuilder buffer = new StringBuilder();
         ArrayList<Integer> textInArr = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class Decoder {
                 char newSymbol = huffmanTree.getSymbolFromASCIICode(codeASCII);
                 buffer.append(newSymbol);
                 huffmanTree.insertNewValue(newSymbol);
-                i = i + actualNYTLength + 8;   //read codeNYT and 1 symbol (8 bits)
+                i += actualNYTLength + 8;   //read codeNYT and 1 symbol (8 bits)
                 huffmanTree.generateCodeNYT();  //update codeNYT
             } else {
                 Tuple tuple = findSymbolInTree(huffmanTree, textInArr, i);
@@ -56,8 +56,10 @@ public class Decoder {
 
     public static boolean isNextCodeNYT(HuffmanTree tree, String text, int i) {
         String actualCodeNYT = tree.codeNYT.toString();
-        String stringToCheck = text.substring(i, i + actualCodeNYT.length());
-        return Integer.parseInt(actualCodeNYT) == Integer.parseInt(stringToCheck);
+        if (i + actualCodeNYT.length() < text.length()) {
+            String stringToCheck = text.substring(i, i + actualCodeNYT.length());
+            return Integer.parseInt(actualCodeNYT) == Integer.parseInt(stringToCheck);
+        } else return false;
     }
 
 
