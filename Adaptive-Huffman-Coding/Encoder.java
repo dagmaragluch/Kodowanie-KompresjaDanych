@@ -30,6 +30,8 @@ public class Encoder {
 //        System.out.println("ENCODE: " + buffer.toString());
 
         conversion.writeDecodedTextToFile(buffer, outputFile);
+
+        conversion.getValuesDescribingTheCompression(inputFile, outputFile, text, buffer.toString());
     }
 
 }

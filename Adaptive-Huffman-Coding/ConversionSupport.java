@@ -16,10 +16,8 @@ public class ConversionSupport {
         }
         String textInString = sb.toString();
 
-        System.out.println("'" + textInString.substring(0,textInString.length()-1) + "'");
-//        System.out.println(textInString.substring(0,textInString.length()-1));
-        return textInString.substring(0,textInString.length()-1);  //remove last (redundant) EOF symbol
-//        return textInString;
+//        System.out.println("'" + textInString.substring(0, textInString.length() - 1) + "'");
+        return textInString.substring(0, textInString.length() - 1);  //remove last (redundant) EOF symbol
     }
 
     public void writeDecodedTextToFile(StringBuilder buffer, String outputFile) {
@@ -34,24 +32,21 @@ public class ConversionSupport {
 
     }
 
-    public void getValuesDescribingTheCompression(String inputFileName, String outputFileName, String text, String binaryString, boolean isEncoding) throws IOException {
+    public void getValuesDescribingTheCompression(String inputFileName, String outputFileName, String text, String binaryString) throws IOException {
         System.out.println("Wartości opisujące kompresję:");
 
-        //ENCODING
-
-        File input = new File(inputFileName);
-        File output = new File(outputFileName);
-
         //wielkość kodowanego pliku
-        int sizeOfText = Integer.parseInt(getFileSizeBytes(input));
-        System.out.println("Wielkość kodowanego pliku: " + sizeOfText + "bajtów");
+        int sizeOfText = text.length();
+        System.out.println("Wielkość kodowanego pliku: " + sizeOfText);
 
         //wielkośś uzyskanego kodu
         int sizeOfCode = convertFileToString(outputFileName).length() / 8;
-        System.out.println("Wielkość uzyskanego kodu: " + sizeOfCode + "bajtów");
+        System.out.println("Wielkość uzyskanego kodu: " + sizeOfCode);
 
         //stopień kompresji = dł przed skompresowaniem/dł po skompresowaniu
-        System.out.println("stopień kompresji: " + (float) sizeOfText / sizeOfCode);
+        float compressionDegree = (float) sizeOfText / sizeOfCode;
+
+        System.out.println("stopień kompresji: " + compressionDegree);
 
         //entropia kodowanego tekstu
         byte[] byteArray = converter.convertFileToByteArray(inputFileName);
@@ -68,20 +63,5 @@ public class ConversionSupport {
         //średnia długość kodu
         float averageLengthOfCode = (float) binaryString.length() / text.length();
         System.out.println("średnia długość kodu: " + averageLengthOfCode);
-
-
-        //DECODING
     }
-
-
-    public void getAverageLengthOfCode(String text, String binaryString) {
-        //średnia długość kodowania
-        int averageLengthOfCode = 0;
-    }
-
-
-    private static String getFileSizeBytes(File file) {
-        return file.length() + " bytes";
-    }
-
 }
