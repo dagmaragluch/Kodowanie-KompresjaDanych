@@ -72,32 +72,53 @@ public class ConverterTGA {
     }
 
 
-    public static int[][] getPixel2DArray(BufferedImage img) throws IOException {
+    public static Pixel[][] getPixel2DArray(BufferedImage img) {
         int[] pixelsInt = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
         System.out.println(pixelsInt.length);
 
-        int weight = img.getWidth();
-        int height = img.getHeight();
-//        System.out.println("WEIGHT = " + weight + "   HEIGHT = " + height);
+        int numberOfColumns = img.getWidth();
+        int numberOfRows = img.getHeight();
+//        System.out.println("WEIGHT = " + numberOfColumns + "   HEIGHT = " + numberOfRows);
 
-        int[][] pixels = new int[weight][height];
+        Pixel[][] pixels = new Pixel[numberOfColumns][numberOfRows];
 
         int i = 0;
-        for (int row = 0; row < weight; row++) {
-            for (int column = 0; column < height; column++) {
+        for (int row = 0; row < numberOfColumns; row++) {
+            for (int column = 0; column < numberOfRows; column++) {
 //                System.err.println("pixels[" + row + "][" + column + "] = pixelsInt[" + i + "]   -->  " + pixelsInt[i]);
-                pixels[row][column] = pixelsInt[i];
+                pixels[row][column] = new Pixel(row, column, convertIntegerToColor(pixelsInt[i]));
                 i++;
             }
         }
         return pixels;
     }
 
+    /**
+     * example binaryString: 11111111 01001010 00010111 00101010
+     * 1st byte: value of alpha (in this exercise always = 11111111)
+     * 2nd byte: value of red color
+     * 3th byte: value of green
+     * 4th byte: value of blue
+     */
+
+    public static ColorRGB convertIntegerToColor(int number) {
+
+        String binaryString = Integer.toBinaryString(number);
+
+        int red = Integer.parseInt(binaryString.substring(8, 16),2);
+        int green = Integer.parseInt(binaryString.substring(16, 24),2);
+        int blue = Integer.parseInt(binaryString.substring(24, 32),2);
+
+        return new ColorRGB(red, green, blue);
+    }
+
 
     public static void main(String[] args) throws IOException {
         BufferedImage img = (BufferedImage) getImage("C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga");
-        getPixel2DArray(img);
+        Pixel[][] p = getPixel2DArray(img);
+        System.out.println(p);
 
+//        ColorRGB c = convertIntegerToColor(-7751775);
 
         Integer a = -11921622;
         byte b = a.byteValue();

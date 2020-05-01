@@ -1,7 +1,7 @@
 public class Pixel {
 
-    int row;
-    int column;
+    private int row;
+    private int column;
     ColorRGB color;
 
     public Pixel(int row, int column, ColorRGB color){
