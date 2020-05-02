@@ -74,7 +74,6 @@ public class ConverterTGA {
 
     public static Pixel[][] getPixel2DArray(BufferedImage img) {
         int[] pixelsInt = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
-        System.out.println(pixelsInt.length);
 
         int numberOfColumns = img.getWidth();
         int numberOfRows = img.getHeight();

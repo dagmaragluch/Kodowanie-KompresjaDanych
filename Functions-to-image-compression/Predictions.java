@@ -1,15 +1,21 @@
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class PredictionsJPEG {
+public class Predictions {
 
     public final Pixel BLACK = new Pixel(0, 0, 0);
 
-    BufferedImage image;
+//    public String fileName;
+//
+//    public Predictions(String fileName) {
+//        this.fileName = fileName;
+//    }
 
+    BufferedImage image;
     {
         try {
             image = (BufferedImage) ConverterTGA.getImage("C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga");
+//            image = (BufferedImage) ConverterTGA.getImage(this.fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

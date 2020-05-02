@@ -73,5 +73,14 @@ public class Pixel {
         return sum1 >= sum2;
     }
 
+    //return true if all component are equal
+    public static boolean isEquals(Pixel p1, Pixel p2) {
+        if(p1.getRed() == p2.getRed())
+            if (p1.getGreen() == p2.getGreen())
+                return p1.getBlue() == p2.getBlue();
+
+        return false;
+    }
+
 
 }
