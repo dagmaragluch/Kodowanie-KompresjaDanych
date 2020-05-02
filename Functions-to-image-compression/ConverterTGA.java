@@ -78,7 +78,6 @@ public class ConverterTGA {
 
         int numberOfColumns = img.getWidth();
         int numberOfRows = img.getHeight();
-//        System.out.println("WEIGHT = " + numberOfColumns + "   HEIGHT = " + numberOfRows);
 
         Pixel[][] pixels = new Pixel[numberOfColumns][numberOfRows];
 
@@ -86,7 +85,7 @@ public class ConverterTGA {
         for (int row = 0; row < numberOfColumns; row++) {
             for (int column = 0; column < numberOfRows; column++) {
 //                System.err.println("pixels[" + row + "][" + column + "] = pixelsInt[" + i + "]   -->  " + pixelsInt[i]);
-                pixels[row][column] = new Pixel(row, column, convertIntegerToColor(pixelsInt[i]));
+                pixels[row][column] = convertIntegerToColor(pixelsInt[i]);
                 i++;
             }
         }
@@ -101,7 +100,7 @@ public class ConverterTGA {
      * 4th byte: value of blue
      */
 
-    public static ColorRGB convertIntegerToColor(int number) {
+    public static Pixel convertIntegerToColor(int number) {
 
         String binaryString = Integer.toBinaryString(number);
 
@@ -109,24 +108,7 @@ public class ConverterTGA {
         int green = Integer.parseInt(binaryString.substring(16, 24),2);
         int blue = Integer.parseInt(binaryString.substring(24, 32),2);
 
-        return new ColorRGB(red, green, blue);
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        BufferedImage img = (BufferedImage) getImage("C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga");
-        Pixel[][] p = getPixel2DArray(img);
-        System.out.println(p);
-
-//        ColorRGB c = convertIntegerToColor(-7751775);
-
-        Integer a = -11921622;
-        byte b = a.byteValue();
-        System.out.println(b);
-        System.out.println(Integer.toBinaryString(b));
-        System.out.println(Integer.toBinaryString(a));
-        System.out.println(Integer.toBinaryString(-7751775));
-        System.out.println(Integer.toBinaryString(-10323864));
+        return new Pixel(red, green, blue);
     }
 
 

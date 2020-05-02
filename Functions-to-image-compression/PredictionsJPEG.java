@@ -3,7 +3,7 @@ import java.io.IOException;
 
 public class PredictionsJPEG {
 
-    public final ColorRGB BLACK = new ColorRGB(0, 0, 0);
+    public final Pixel BLACK = new Pixel(0, 0, 0);
 
     BufferedImage image;
 
@@ -20,77 +20,53 @@ public class PredictionsJPEG {
     public final int numberOfRows = pixels[0].length;
 
 
-    public ColorRGB[][] getImageOfPredictions(int methodNumber) {
+    public Pixel[][] getImageOfPredictions(int methodNumber) {
 
-        ColorRGB[][] newPixels1 = new ColorRGB[numberOfColumns][numberOfRows];
+        Pixel[][] newPixels1 = new Pixel[numberOfColumns][numberOfRows];
 
         for (int row = 0; row < numberOfColumns; row++) {
             for (int column = 0; column < numberOfRows; column++) {
-                newPixels1[row][column] = getPrediction(pixels[row][column], methodNumber);
-                //ZMIENIĆ TO JAKOŚ, ŻEBY WSTAWIAĆ RÓŻNICĘ X-X'
-                //PROBLEM: COLOR NIE MOZE MIEC WARTOSCI UJEMNYCH
-                //ALBO WYRZUCIC EXCEPTION ALBO DOPISAĆ NOWA KLASE
+//                newPixels1[row][column] = getPrediction(pixels[row][column], methodNumber);
+                newPixels1[row][column] = getPrediction(row, column, methodNumber);
             }
         }
-
         return newPixels1;
     }
 
 
     /********************************/
 
-
-    public void test() {
-        System.out.println("WEIGHT = " + numberOfColumns + "   HEIGHT = " + numberOfRows);
-    }
-
-
-    public static void main(String[] args) {
-        PredictionsJPEG jpeg = new PredictionsJPEG();
-
-        ColorRGB[][] c = jpeg.getImageOfPredictions(1);
-        System.out.println(c);
-    }
-
-
     /**
      * NW |  N
      * -----------
      * W |  X
      */
-    public ColorRGB getN(Pixel pixelX) {
-        int rowX = pixelX.getRow();
-        int columnX = pixelX.getColumn();
+    public Pixel getN(int rowX, int columnX) {
 
         if (rowX != 0) {
-            return pixels[rowX - 1][columnX].getColor();
+            return pixels[rowX - 1][columnX];
         } else {
             return BLACK;
         }
     }
 
-    public ColorRGB getW(Pixel pixelX) {
-        int rowX = pixelX.getRow();
-        int columnX = pixelX.getColumn();
+    public Pixel getW(int rowX, int columnX) {
 
         if (columnX != 0) {
-            return pixels[rowX][columnX - 1].getColor();
+            return pixels[rowX][columnX - 1];
         } else {
             return BLACK;
         }
     }
 
-    public ColorRGB getNW(Pixel pixelX) {
-        int rowX = pixelX.getRow();
-        int columnX = pixelX.getColumn();
+    public Pixel getNW(int rowX, int columnX) {
 
         if (rowX != 0 && columnX != 0) {
-            return pixels[rowX - 1][columnX - 1].getColor();
+            return pixels[rowX - 1][columnX - 1];
         } else {
             return BLACK;
         }
     }
-
 
     /**
      * 1) X' = W
@@ -103,16 +79,53 @@ public class PredictionsJPEG {
      * 8) X' = new standard
      */
 
-    public ColorRGB getPrediction(Pixel oldPixel, int methodNumber) {
+    public Pixel getPrediction(int r, int c, int methodNumber) {
 
         switch (methodNumber) {
             case 1:
-                return getW(oldPixel);
+                return getW(r, c);
             case 2:
-                return getN(oldPixel);
+                return getN(r, c);
+            case 3:
+                return getNW(r, c);
+            case 4:
+                Pixel temp = Pixel.plus(getN(r, c), getW(r, c));
+                return Pixel.minus(temp, getNW(r, c));
+            case 5:
+                Pixel temp1 = Pixel.div2(Pixel.minus(getW(r, c), getNW(r, c)));
+                return Pixel.plus(getN(r, c), temp1);
+            case 6:
+                Pixel temp2 = Pixel.div2(Pixel.minus(getN(r, c), getNW(r, c)));
+                return Pixel.plus(getW(r, c), temp2);
+            case 7:
+                Pixel temp3 = Pixel.plus(getN(r, c), getW(r, c));
+                return Pixel.div2(temp3);
+            case 8:
+                return newStandard(r, c);
             default:
                 return null;
         }
+    }
+
+
+    public Pixel newStandard(int r, int c) {
+        Pixel N = getN(r, c);
+        Pixel W = getW(r, c);
+        Pixel NW = getNW(r, c);
+        Pixel maxWandN = Pixel.max(W, N);
+        Pixel minWandN = Pixel.min(W, N);
+
+        //if NW >= max(W, N)
+        if (Pixel.isGreaterOrEqualTo(NW, maxWandN)) {
+            return maxWandN;
+        } else
+            //if min(W, N) >= NW
+            if (Pixel.isGreaterOrEqualTo(minWandN, NW)) {
+                return minWandN;
+            } else {
+                Pixel temp = Pixel.plus(W, N);
+                return Pixel.minus(temp, NW);
+            }
     }
 
 
