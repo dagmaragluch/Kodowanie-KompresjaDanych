@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * Read TGA file and convert it to two dimensional array of Pixels
+ */
 public class ConverterTGA {
 
     public static Image getImage(String fileName) throws IOException {
@@ -60,8 +63,10 @@ public class ConverterTGA {
                 int g = read(buf);
                 int r = read(buf);
                 int v = 0xff000000 | (r << 16) | (g << 8) | b;
-                for (int i = 0; i <= nb; i++)
-                    pixels[idx++] = v;
+                for (int i = 0; i <= nb; i++) {
+                    if (idx < pixels.length)
+                        pixels[idx++] = v;
+                }
             }
             n -= nb + 1;
         }
@@ -72,6 +77,11 @@ public class ConverterTGA {
     }
 
 
+    /**
+     * First get long integer array from BufferedImage (1 pixel = 1 integer)
+     * than write it as Pixels into two dimension array;
+     * location of pixel is marked by row and column numbers - as they were in image
+     */
     public static Pixel[][] getPixel2DArray(BufferedImage img) {
         int[] pixelsInt = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
 
@@ -83,7 +93,6 @@ public class ConverterTGA {
         int i = 0;
         for (int row = 0; row < numberOfColumns; row++) {
             for (int column = 0; column < numberOfRows; column++) {
-//                System.err.println("pixels[" + row + "][" + column + "] = pixelsInt[" + i + "]   -->  " + pixelsInt[i]);
                 pixels[row][column] = convertIntegerToColor(pixelsInt[i]);
                 i++;
             }
@@ -92,20 +101,21 @@ public class ConverterTGA {
     }
 
     /**
+     * Convert integer value first to binary string, than to Pixel (color RGB)
+     *
      * example binaryString: 11111111 01001010 00010111 00101010
      * 1st byte: value of alpha (in this exercise always = 11111111)
      * 2nd byte: value of red color
      * 3th byte: value of green
      * 4th byte: value of blue
      */
-
     public static Pixel convertIntegerToColor(int number) {
 
         String binaryString = Integer.toBinaryString(number);
 
-        int red = Integer.parseInt(binaryString.substring(8, 16),2);
-        int green = Integer.parseInt(binaryString.substring(16, 24),2);
-        int blue = Integer.parseInt(binaryString.substring(24, 32),2);
+        int red = Integer.parseInt(binaryString.substring(8, 16), 2);
+        int green = Integer.parseInt(binaryString.substring(16, 24), 2);
+        int blue = Integer.parseInt(binaryString.substring(24, 32), 2);
 
         return new Pixel(red, green, blue);
     }

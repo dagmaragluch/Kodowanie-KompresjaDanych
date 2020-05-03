@@ -1,15 +1,16 @@
+import java.io.IOException;
 import java.util.HashMap;
 
 public class Main {
 
     public static void main(String[] args) {
         CalculationEntropy entropy = new CalculationEntropy();
-        Predictions predictions = new Predictions();
+        Predictions predictions = new Predictions(args[0]);
         int optimalMethod = 1;
 
         Pixel[][] img0 = predictions.pixels;
 
-        //entropia obrazu wejściowego
+        /** entropy of input image*/
         HashMap<Pixel, Float> mapOfPixels0 = entropy.getCzestoscOfPixels(img0);
         HashMap<Integer, Float> mapOfRed0 = entropy.getCzestoscOfColor(img0, 1);
         HashMap<Integer, Float> mapOfGreen0 = entropy.getCzestoscOfColor(img0, 2);
@@ -26,7 +27,7 @@ public class Main {
         System.out.println("    B: " + entropyBlue0);
         System.out.println();
 
-
+        /** entropy of predictions-images */
         for (int i = 1; i <= 8; i++) {
             Pixel[][] img = predictions.getImageOfPredictions(i);
             HashMap<Pixel, Float> mapOfPixels = entropy.getCzestoscOfPixels(img);

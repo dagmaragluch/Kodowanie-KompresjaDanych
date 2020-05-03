@@ -5,47 +5,57 @@ public class Predictions {
 
     public final Pixel BLACK = new Pixel(0, 0, 0);
 
-//    public String fileName;
-//
-//    public Predictions(String fileName) {
-//        this.fileName = fileName;
-//    }
+    public BufferedImage image;
+    public Pixel[][] pixels;
+    public int numberOfColumns;
+    public int numberOfRows;
 
-    BufferedImage image;
-    {
+
+    public Predictions(String fileName) {
+        image = initImage(fileName);
+        initValues(image);
+    }
+
+    private BufferedImage initImage(String fileName) {
         try {
-            image = (BufferedImage) ConverterTGA.getImage("C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga");
-//            image = (BufferedImage) ConverterTGA.getImage(this.fileName);
+            return (BufferedImage) ConverterTGA.getImage(fileName);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    public final Pixel[][] pixels = ConverterTGA.getPixel2DArray(image);
-    public final int numberOfColumns = pixels.length;
-    public final int numberOfRows = pixels[0].length;
+    private void initValues(BufferedImage image) {
+        pixels = ConverterTGA.getPixel2DArray(image);
+        numberOfColumns = pixels.length;
+        numberOfRows = pixels[0].length;
+    }
 
-
+    /**
+     * Calculate prediction from input image
+     * @param methodNumber - number of method used to calculation
+     * @return array of subtractions of Pixels and Predictions (X-X')
+     */
     public Pixel[][] getImageOfPredictions(int methodNumber) {
 
-        Pixel[][] newPixels1 = new Pixel[numberOfColumns][numberOfRows];
+        Pixel[][] newPixels = new Pixel[numberOfColumns][numberOfRows];
 
         for (int row = 0; row < numberOfColumns; row++) {
             for (int column = 0; column < numberOfRows; column++) {
-//                newPixels1[row][column] = getPrediction(pixels[row][column], methodNumber);
-                newPixels1[row][column] = getPrediction(row, column, methodNumber);
+                //X - X'
+                newPixels[row][column] = Pixel.minus(pixels[row][column],  getPrediction(row, column, methodNumber));
             }
         }
-        return newPixels1;
+        return newPixels;
     }
 
 
-    /********************************/
-
     /**
-     * NW |  N
-     * -----------
-     * W |  X
+     * Functions to get neighbour pixel X: N, W or NW
+     *
+     *    NW |  N
+     *    --------
+     *    W |  X
      */
     public Pixel getN(int rowX, int columnX) {
 
@@ -75,6 +85,7 @@ public class Predictions {
     }
 
     /**
+     * Get Prediction of pixel using 1 from 8 methods:
      * 1) X' = W
      * 2) X' = N
      * 3) X' = NW
@@ -83,8 +94,11 @@ public class Predictions {
      * 6) X' = W + (N − NW)/2
      * 7) X' = (N + W)/2
      * 8) X' = new standard
+     *
+     * @param r - row
+     * @param c - column
+     * @return prediction
      */
-
     public Pixel getPrediction(int r, int c, int methodNumber) {
 
         switch (methodNumber) {
@@ -113,7 +127,13 @@ public class Predictions {
         }
     }
 
-
+    /**
+     * Another, new method to calculating prediction
+     *
+     * @param r - row
+     * @param c - column
+     * @return prediction
+     */
     public Pixel newStandard(int r, int c) {
         Pixel N = getN(r, c);
         Pixel W = getW(r, c);
@@ -133,6 +153,5 @@ public class Predictions {
                 return Pixel.minus(temp, NW);
             }
     }
-
 
 }
