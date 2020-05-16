@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Algorithm-LZ77" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Basic-functions-describing-compression" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Functions-to-image-compression" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Uniform-Quantization" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

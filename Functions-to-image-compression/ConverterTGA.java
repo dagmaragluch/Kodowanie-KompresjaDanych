@@ -1,10 +1,16 @@
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
+import java.awt.image.Raster;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * Read TGA file and convert it to two dimensional array of Pixels
@@ -102,7 +108,7 @@ public class ConverterTGA {
 
     /**
      * Convert integer value first to binary string, than to Pixel (color RGB)
-     *
+     * <p>
      * example binaryString: 11111111 01001010 00010111 00101010
      * 1st byte: value of alpha (in this exercise always = 11111111)
      * 2nd byte: value of red color
@@ -118,6 +124,58 @@ public class ConverterTGA {
         int blue = Integer.parseInt(binaryString.substring(24, 32), 2);
 
         return new Pixel(red, green, blue);
+    }
+
+    public static int convertColorToInteger(Pixel pixel) {
+
+        String alpha = "11111111";
+        String red = Integer.toBinaryString(pixel.getRed());
+        red = String.format("%08d", Integer.parseInt(red));
+        String green = Integer.toBinaryString(pixel.getGreen());
+        green = String.format("%08d", Integer.parseInt(green));
+        String blue = Integer.toBinaryString(pixel.getBlue());
+        blue = String.format("%08d", Integer.parseInt(blue));
+
+        String binaryPixelValue = alpha + red + green + blue;
+//        System.out.println(binaryPixelValue);
+
+        int pixelValue = (int) Long.parseLong(binaryPixelValue, 2);
+//        System.out.println(pixelValue);
+
+        return pixelValue;
+    }
+
+    public static BufferedImage getNewImage(BufferedImage oldImage, Pixel[][] newPixelsArray) {
+
+//        List<Pixel> newPixels = twoDArrayToList(newPixelsArray);
+        DataBuffer dataBuffer = (DataBufferInt) oldImage.getRaster().getDataBuffer();
+
+//        BufferedImage newImage =
+//        int[] pixelsInt = ((DataBufferInt) oldImage.getRaster().getDataBuffer().setElem();
+
+
+        int numberOfColumns = oldImage.getWidth();
+        int numberOfRows = oldImage.getHeight();
+
+        int i = 0;
+        for (int row = 0; row < numberOfColumns; row++) {
+            for (int column = 0; column < numberOfRows; column++) {
+                int newValue = convertColorToInteger(newPixelsArray[row][column]);
+                dataBuffer.setElem(i, newValue);
+                i++;
+            }
+        }
+
+        return oldImage;
+    }
+
+
+    public static <T> List<T> twoDArrayToList(T[][] twoDArray) {
+        List<T> list = new ArrayList<T>();
+        for (T[] array : twoDArray) {
+            list.addAll(Arrays.asList(array));
+        }
+        return list;
     }
 
 
