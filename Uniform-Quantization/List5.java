@@ -27,14 +27,12 @@ public class List5 {
         Pixel[][] newPixels = quantization.imageQuantization();
         BufferedImage img = ConverterTGA.getNewImage(newPixels);
 
+        quantization.mseAndSNR(quantization.pixels, newPixels);
+
 
         File outputFile = new File(outputFileName);
         ImageIO.write(img, "TGA", outputFile);
 
     }
 
-    public static int bytesCount(int n) {       //teraz BITÓW!!!
-//        return n < 0 ? 4 : (32 - Integer.numberOfLeadingZeros(n)) / 8 + 1;
-        return n < 0 ? 4 : (32 - Integer.numberOfLeadingZeros(n));
-    }
 }

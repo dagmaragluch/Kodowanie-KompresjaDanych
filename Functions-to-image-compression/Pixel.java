@@ -5,7 +5,8 @@ public class Pixel {
     private final int blue;
 
 
-    public Pixel(int red, int green, int blue) { ;
+    public Pixel(int red, int green, int blue) {
+        ;
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -69,6 +70,11 @@ public class Pixel {
         if (sum1 < sum2) return p1;
         else return p2;
     }
+
+    public static int sumPixel(Pixel p1) {
+        return p1.getRed() + p1.getGreen() + p1.getBlue();
+    }
+
 
     public static boolean isGreaterOrEqualTo(Pixel p1, Pixel p2) {
         int sum1 = p1.getRed() + p1.getGreen() + p1.getBlue();
