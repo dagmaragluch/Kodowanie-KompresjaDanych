@@ -5,21 +5,20 @@ public class Quantization {
 
     ConverterTGA converterTGA = new ConverterTGA();
 
-    public final int RED_BITS = 1;
-    public final int GREEN_BITS = 1;
-    public final int BLUE_BITS = 1;
     public final int MAX_VALUE_OF_COLOR = 256;
-
 
     public BufferedImage image;
     public Pixel[][] pixels;
     public int numberOfColumns;
     public int numberOfRows;
 
+    public int RED_BITS;
+    public int GREEN_BITS;
+    public int BLUE_BITS;
 
-    public Quantization(String fileName) {
+    public Quantization(String fileName, int bitsForRed, int bitsForGreen, int bitsForBlue) {
         image = initImage(fileName);
-        initValues();
+        initValues(bitsForRed, bitsForGreen, bitsForBlue);
     }
 
     private BufferedImage initImage(String fileName) {
@@ -31,10 +30,15 @@ public class Quantization {
         }
     }
 
-    private void initValues() {
+    private void initValues(int bitsForRed, int bitsForGreen, int bitsForBlue) {
         pixels = converterTGA.getPixels();
         numberOfColumns = pixels.length;
         numberOfRows = pixels[0].length;
+
+        RED_BITS = bitsForRed;
+        GREEN_BITS = bitsForGreen;
+        BLUE_BITS = bitsForBlue;
+
     }
 
     /**
