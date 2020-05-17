@@ -14,7 +14,7 @@ public class Predictions {
 
     public Predictions(String fileName) {
         image = initImage(fileName);
-        initValues(image);
+        initValues();
     }
 
     private BufferedImage initImage(String fileName) {
@@ -26,8 +26,8 @@ public class Predictions {
         }
     }
 
-    private void initValues(BufferedImage image) {
-        pixels = ConverterTGA.getPixel2DArray(image);
+    private void initValues() {
+        pixels = converterTGA.getPixels();
         numberOfColumns = pixels.length;
         numberOfRows = pixels[0].length;
     }

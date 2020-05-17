@@ -10,21 +10,14 @@ public class List5 {
         Quantization quantization = new Quantization(fileName);
         BufferedImage oldImage = quantization.image;
 
-//        Pixel p = new Pixel(74, 23, 42);
-//        ConverterTGA.convertColorToInteger(p);
+
+        Pixel[][] newPixels = quantization.imageQuantization();
+        BufferedImage img = ConverterTGA.getNewImage(newPixels);
+        System.out.println(img);
 
 
-//        Pixel[][] newPixels = quantization.imageQuantization();
-//        BufferedImage img = ConverterTGA.getNewImage(oldImage, newPixels);
-//        System.out.println(img);
-
-
-        File outputFile = new File("C:\\Users\\gluch\\Desktop\\kkd\\test2.tga");
-//        ImageIO.write(img, "TGA", outputFile);
-        ImageIO.write(oldImage, "TGA", outputFile);
-
-//        System.out.println(Integer.toBinaryString(-10477536));
-
+        File outputFile = new File("C:\\Users\\gluch\\Desktop\\kkd\\new-test.tga");
+        ImageIO.write(img, "TGA", outputFile);
 
     }
 

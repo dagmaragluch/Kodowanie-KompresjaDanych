@@ -5,9 +5,9 @@ public class Quantization {
 
     ConverterTGA converterTGA = new ConverterTGA();
 
-    public final int RED_BITS = 2;
-    public final int GREEN_BITS = 2;
-    public final int BLUE_BITS = 2;
+    public final int RED_BITS = 1;
+    public final int GREEN_BITS = 1;
+    public final int BLUE_BITS = 1;
     public final int MAX_VALUE_OF_COLOR = 256;
 
 
@@ -19,7 +19,7 @@ public class Quantization {
 
     public Quantization(String fileName) {
         image = initImage(fileName);
-        initValues(image);
+        initValues();
     }
 
     private BufferedImage initImage(String fileName) {
@@ -31,8 +31,8 @@ public class Quantization {
         }
     }
 
-    private void initValues(BufferedImage image) {
-        pixels = ConverterTGA.getPixel2DArray(image);
+    private void initValues() {
+        pixels = converterTGA.getPixels();
         numberOfColumns = pixels.length;
         numberOfRows = pixels[0].length;
     }
@@ -64,14 +64,13 @@ public class Quantization {
         int step = MAX_VALUE_OF_COLOR / k;  //how many intervals
         int midpointOfInterval = step / 2;
 
-//        for (int i = 0; i <= MAX_VALUE_OF_COLOR; i+=step) {
         for (int i = 0; i < k; i++) {
             if (colorValue > i * step && colorValue < (i + 1) * step) {
                 return midpointOfInterval;
             }
             midpointOfInterval += step;
         }
-        return midpointOfInterval;      // or 0 ??
+        return midpointOfInterval;
     }
 
 }
