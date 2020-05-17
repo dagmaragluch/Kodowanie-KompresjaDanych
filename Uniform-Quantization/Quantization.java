@@ -3,9 +3,11 @@ import java.io.IOException;
 
 public class Quantization {
 
-    public final int RED_BITS = 3;
-    public final int GREEN_BITS = 3;
-    public final int BLUE_BITS = 3;
+    ConverterTGA converterTGA = new ConverterTGA();
+
+    public final int RED_BITS = 2;
+    public final int GREEN_BITS = 2;
+    public final int BLUE_BITS = 2;
     public final int MAX_VALUE_OF_COLOR = 256;
 
 
@@ -22,7 +24,7 @@ public class Quantization {
 
     private BufferedImage initImage(String fileName) {
         try {
-            return (BufferedImage) ConverterTGA.getImage(fileName);
+            return (BufferedImage) converterTGA.getImage(fileName);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

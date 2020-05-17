@@ -5,6 +5,7 @@ public class Predictions {
 
     public final Pixel BLACK = new Pixel(0, 0, 0);
 
+    ConverterTGA converterTGA = new ConverterTGA();
     public BufferedImage image;
     public Pixel[][] pixels;
     public int numberOfColumns;
@@ -18,7 +19,7 @@ public class Predictions {
 
     private BufferedImage initImage(String fileName) {
         try {
-            return (BufferedImage) ConverterTGA.getImage(fileName);
+            return (BufferedImage) converterTGA.getImage(fileName);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

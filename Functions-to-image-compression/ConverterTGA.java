@@ -1,9 +1,7 @@
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
-import java.awt.image.Raster;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +15,21 @@ import java.util.Arrays;
  */
 public class ConverterTGA {
 
-    public static Image getImage(String fileName) throws IOException {
+    private Pixel[][] pixelsArray;
+
+    public Pixel[][] getPixels() {
+        return pixelsArray;
+    }
+
+    public ConverterTGA(){
+        this.pixelsArray = null;
+    }
+
+//    public void setPixels(Pixel[][] pixels) {
+//        this.pixelsArray = pixels;
+//    }
+
+    public Image getImage(String fileName) throws IOException {
         File f = new File(fileName);
         byte[] buf = new byte[(int) f.length()];
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
@@ -37,7 +49,7 @@ public class ConverterTGA {
         return btoi(buf[offset++]);
     }
 
-    public static Image decode(byte[] buf) throws IOException {
+    public Image decode(byte[] buf) {
         offset = 0;
 
         // Reading header
@@ -51,33 +63,28 @@ public class ConverterTGA {
         // Reading data
         int n = width * height;
         int[] pixels = new int[n];
-        int idx = 0;
+        int idx = n - 1;
 
-        while (n > 0) {
-            int nb = read(buf);
-            if ((nb & 0x80) == 0) {
-                for (int i = 0; i <= nb; i++) {
-                    int b = read(buf);
-                    int g = read(buf);
-                    int r = read(buf);
-                    if (idx < pixels.length)
-                        pixels[idx++] = 0xff000000 | (r << 16) | (g << 8) | b;
-                }
-            } else {
-                nb &= 0x7f;
+
+        Pixel[][] pixels2 = new Pixel[width][height];
+
+//        for (int i = height - 1; i >= 0; i--) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 int b = read(buf);
                 int g = read(buf);
                 int r = read(buf);
-                int v = 0xff000000 | (r << 16) | (g << 8) | b;
-                for (int i = 0; i <= nb; i++) {
-                    if (idx < pixels.length)
-                        pixels[idx++] = v;
-                }
+                pixels[idx] = (r << 16) | (g << 8) | b;
+                idx--;
+//                System.err.println("i = " + i + "  j = " + j);
+                pixels2[j][i] = new Pixel(r, g, b);
+
             }
-            n -= nb + 1;
         }
 
-        BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.pixelsArray = pixels2;
+
+        BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         bimg.setRGB(0, 0, width, height, pixels, 0, width);
         return bimg;
     }
@@ -119,16 +126,25 @@ public class ConverterTGA {
 
         String binaryString = Integer.toBinaryString(number);
 
-        int red = Integer.parseInt(binaryString.substring(8, 16), 2);
-        int green = Integer.parseInt(binaryString.substring(16, 24), 2);
-        int blue = Integer.parseInt(binaryString.substring(24, 32), 2);
+        while (binaryString.length() < 24) {
+            binaryString = "0" + binaryString;
+        }
+
+//        int red = Integer.parseInt(binaryString.substring(8, 16), 2);
+//        int green = Integer.parseInt(binaryString.substring(16, 24), 2);
+//        int blue = Integer.parseInt(binaryString.substring(24, 32), 2);
+
+        int red = Integer.parseInt(binaryString.substring(0, 8), 2);
+        int green = Integer.parseInt(binaryString.substring(8, 16), 2);
+        int blue = Integer.parseInt(binaryString.substring(16, 24), 2);
+
 
         return new Pixel(red, green, blue);
     }
 
     public static int convertColorToInteger(Pixel pixel) {
 
-        String alpha = "11111111";
+//        String alpha = "11111111";
         String red = Integer.toBinaryString(pixel.getRed());
         red = String.format("%08d", Integer.parseInt(red));
         String green = Integer.toBinaryString(pixel.getGreen());
@@ -136,7 +152,8 @@ public class ConverterTGA {
         String blue = Integer.toBinaryString(pixel.getBlue());
         blue = String.format("%08d", Integer.parseInt(blue));
 
-        String binaryPixelValue = alpha + red + green + blue;
+//        String binaryPixelValue = alpha + red + green + blue;
+        String binaryPixelValue = red + green + blue;
 //        System.out.println(binaryPixelValue);
 
         int pixelValue = (int) Long.parseLong(binaryPixelValue, 2);

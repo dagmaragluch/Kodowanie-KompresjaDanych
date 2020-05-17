@@ -7,24 +7,23 @@ public class List5 {
 
     public static void main(String[] args) throws IOException {
         String fileName = "C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga";
-//        Integer a = 2;
-//        Integer b = 15;
-//        Integer c = 31;
-//        System.out.println(bytesCount(a));
-//        System.out.println(bytesCount(b));
-//        System.out.println(bytesCount(c));
-
         Quantization quantization = new Quantization(fileName);
+        BufferedImage oldImage = quantization.image;
 
 //        Pixel p = new Pixel(74, 23, 42);
 //        ConverterTGA.convertColorToInteger(p);
 
-        Pixel[][] newPixels = quantization.imageQuantization();
-        BufferedImage img = ConverterTGA.getNewImage(quantization.image, newPixels);
-        System.out.println(img);
 
-        File outputFile = new File("C:\\Users\\gluch\\Desktop\\kkd\\image.tga");
-        ImageIO.write(img, "TGA", outputFile);
+//        Pixel[][] newPixels = quantization.imageQuantization();
+//        BufferedImage img = ConverterTGA.getNewImage(oldImage, newPixels);
+//        System.out.println(img);
+
+
+        File outputFile = new File("C:\\Users\\gluch\\Desktop\\kkd\\test2.tga");
+//        ImageIO.write(img, "TGA", outputFile);
+        ImageIO.write(oldImage, "TGA", outputFile);
+
+//        System.out.println(Integer.toBinaryString(-10477536));
 
 
     }
