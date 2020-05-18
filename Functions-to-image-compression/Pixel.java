@@ -6,10 +6,25 @@ public class Pixel {
 
 
     public Pixel(int red, int green, int blue) {
-        ;
+        if (red < 0 || green < 0 || blue < 0 || red > 255 || green > 255 || blue > 255) {   //check if value is in range 0-255
+
+            System.err.println("red = " + red);
+            System.err.println("green = " + green);
+            System.err.println("blue = " + blue);
+            throw new IllegalArgumentException("Color parameter outside of expected range");
+        } else {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
+    }
+
+
+    public Pixel(int red, int green, int blue, boolean isPrediction) {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        isPrediction = true;
     }
     //we don't check if value is in range 0-255, because Pixel is not always is the same
     // as color RGB - sometimes is subtraction of predictions and can be less than 0
@@ -36,7 +51,7 @@ public class Pixel {
         int g = p1.getGreen() + p2.getGreen();
         int b = p1.getBlue() + p2.getBlue();
 
-        return new Pixel(r, g, b);
+        return new Pixel(r, g, b, true);
     }
 
     public static Pixel minus(Pixel p1, Pixel p2) {
@@ -44,7 +59,7 @@ public class Pixel {
         int g = p1.getGreen() - p2.getGreen();
         int b = p1.getBlue() - p2.getBlue();
 
-        return new Pixel(r, g, b);
+        return new Pixel(r, g, b, true);
     }
 
     public static Pixel div2(Pixel p1) {
@@ -52,7 +67,7 @@ public class Pixel {
         int g = p1.getGreen() / 2;
         int b = p1.getBlue() / 2;
 
-        return new Pixel(r, g, b);
+        return new Pixel(r, g, b, true);
     }
 
     public static Pixel max(Pixel p1, Pixel p2) {
@@ -70,11 +85,6 @@ public class Pixel {
         if (sum1 < sum2) return p1;
         else return p2;
     }
-
-    public static int sumPixel(Pixel p1) {
-        return p1.getRed() + p1.getGreen() + p1.getBlue();
-    }
-
 
     public static boolean isGreaterOrEqualTo(Pixel p1, Pixel p2) {
         int sum1 = p1.getRed() + p1.getGreen() + p1.getBlue();

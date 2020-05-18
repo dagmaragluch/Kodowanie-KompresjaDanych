@@ -64,13 +64,13 @@ public class Quantization {
     }
 
     public int colorQuantization(int colorValue, int bitsForColor) {
-        int k = (int) Math.pow(2, bitsForColor);
-        int step = MAX_VALUE_OF_COLOR / k;  //how many intervals
+        int k = (int) Math.pow(2, bitsForColor);   //how many intervals
+        int step = MAX_VALUE_OF_COLOR / k;
         int midpointOfInterval = step / 2;
 
         if (bitsForColor != 8) {
             for (int i = 0; i < k; i++) {
-                if (colorValue > i * step && colorValue < (i + 1) * step) {
+                if (colorValue >= i * step && colorValue < (i + 1) * step) {
                     return midpointOfInterval;
                 }
                 midpointOfInterval += step;
@@ -99,9 +99,6 @@ public class Quantization {
         //mse
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                diffAll = Pixel.sumPixel(oldImage[column][row]) - Pixel.sumPixel(newImage[column][row]);
-                sumAll = sumAll + diffAll * diffAll;
-
                 diffRed = oldImage[column][row].getRed() - newImage[column][row].getRed();
                 sumRed = sumRed + diffRed * diffRed;
 
@@ -111,20 +108,22 @@ public class Quantization {
                 diffBlue = oldImage[column][row].getBlue() - newImage[column][row].getBlue();
                 sumBlue = sumBlue + diffBlue * diffBlue;
 
+                diffAll = diffRed * diffRed + diffGreen * diffGreen + diffBlue * diffBlue;
+                sumAll = sumAll + diffAll;
             }
         }
-        float mseAll = sumAll / N;
+
+        float mseAll = sumAll / (3 * N);
         float mseRed = sumRed / N;
         float mseGreen = sumGreen / N;
         float mseBlue = sumBlue / N;
 
-        System.out.println("mse    = " + Math.sqrt(mseAll));
-        System.out.println("mse(r) = " + Math.sqrt(mseRed));
-        System.out.println("mse(g) = " + Math.sqrt(mseGreen));
-        System.out.println("mse(b) = " + Math.sqrt(mseBlue));
+        System.out.println("mse    = " + mseAll);
+        System.out.println("mse(r) = " + mseRed);
+        System.out.println("mse(g) = " + mseGreen);
+        System.out.println("mse(b) = " + mseBlue);
 
         //SNR
-        sumAll = 0;
         sumRed = 0;
         sumGreen = 0;
         sumBlue = 0;
@@ -132,9 +131,6 @@ public class Quantization {
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                temp = Pixel.sumPixel(newImage[column][row]);
-                sumAll = sumAll + temp * temp;
-
                 temp = newImage[column][row].getRed();
                 sumRed = sumRed + temp * temp;
 
@@ -146,7 +142,8 @@ public class Quantization {
             }
         }
 
-        sumAll = sumAll / N;
+        sumAll = sumRed + sumGreen + sumBlue;
+        sumAll = sumAll / (3 * N);
         sumRed = sumRed / N;
         sumGreen = sumGreen / N;
         sumBlue = sumBlue / N;
@@ -156,10 +153,10 @@ public class Quantization {
         float snrGreen = sumGreen / mseGreen;
         float snrBlue = sumBlue / mseBlue;
 
-        System.out.println("SNR    = " + snrAll + "  (" + 10 * Math.log10(snrAll) + " dB)");
-        System.out.println("SNR(r) = " + snrRed + "  (" + 10 * Math.log10(snrRed) + " dB)");
-        System.out.println("SNR(g) = " + snrGreen + "  (" + 10 * Math.log10(snrGreen) + " dB)");
-        System.out.println("SNR(b) = " + snrBlue + "  (" + 10 * Math.log10(snrBlue) + " dB)");
+        System.out.println("SNR    = " + snrAll + "  (" + 10 * (float) Math.log10(snrAll) + " dB)");
+        System.out.println("SNR(r) = " + snrRed + "  (" + 10 * (float) Math.log10(snrRed) + " dB)");
+        System.out.println("SNR(g) = " + snrGreen + "  (" + 10 * (float) Math.log10(snrGreen) + " dB)");
+        System.out.println("SNR(b) = " + snrBlue + "  (" + 10 * (float) Math.log10(snrBlue) + " dB)");
     }
 
 
