@@ -33,7 +33,7 @@ public class Predictions {
     }
 
     /**
-     * Calculate prediction from input image
+     * Calculate subtractions of prediction from input image
      * @param methodNumber - number of method used to calculation
      * @return array of subtractions of Pixels and Predictions (X-X')
      */
@@ -49,6 +49,25 @@ public class Predictions {
         }
         return newPixels;
     }
+
+    /**
+     * Calculate prediction from input image
+     * method used to calculation - 1) getW
+     * @return array of predictions (X')
+     */
+    public Pixel[][] getImageOfPredictions() {
+
+        Pixel[][] newPixels = new Pixel[numberOfColumns][numberOfRows];
+
+        for (int row = 0; row < numberOfColumns; row++) {
+            for (int column = 0; column < numberOfRows; column++) {
+                //X'
+                newPixels[row][column] = getPrediction(row, column, 1);
+            }
+        }
+        return newPixels;
+    }
+
 
 
     /**
