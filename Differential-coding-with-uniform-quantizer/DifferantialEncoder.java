@@ -26,32 +26,28 @@ public class DifferantialEncoder {
 
 
     public void encode() {
-
         StringBuilder encodedImage = new StringBuilder();
         Pixel[][] differences = getSequenceOfDifferences();
 
         int width = differences.length;
         int height = differences[0].length;
 
-
         for (int column = 0; column < height; column++) {
             for (int row = 0; row < width; row++) {
 
                 Pixel actualPixel = differences[row][column];
 
-                int red = uniformQuantizer.quantizeDifferent(actualPixel.getRed());
-                int green = uniformQuantizer.quantizeDifferent(actualPixel.getGreen());
-                int blue = uniformQuantizer.quantizeDifferent(actualPixel.getBlue());
+                int redInterval = uniformQuantizer.quantizeDifferent(actualPixel.getRed());
+                int greenInterval = uniformQuantizer.quantizeDifferent(actualPixel.getGreen());
+                int blueInterval = uniformQuantizer.quantizeDifferent(actualPixel.getBlue());
 
-                encodedImage.append(intervalToBinary(red));
-                encodedImage.append(intervalToBinary(green));
-                encodedImage.append(intervalToBinary(blue));
+                encodedImage.append(intervalToBinary(redInterval));
+                encodedImage.append(intervalToBinary(greenInterval));
+                encodedImage.append(intervalToBinary(blueInterval) + ";");
             }
             encodedImage.append("\n");
         }
-
         writeToFile(encodedImage);
-
     }
 
 

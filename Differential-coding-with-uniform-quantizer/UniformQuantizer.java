@@ -64,4 +64,13 @@ public class UniformQuantizer {
     }
 
 
+    public int numberOfIntervalToMidpoint(String bin) {
+
+        int interval = Integer.parseInt(bin, 2);
+        int startValue = -MAX_VALUE_OF_COLOR + (step / 2);
+
+        return (interval * step) + startValue;
+    }
+
+
 }
