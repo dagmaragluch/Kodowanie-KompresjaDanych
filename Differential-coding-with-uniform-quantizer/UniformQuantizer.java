@@ -1,11 +1,15 @@
 public class UniformQuantizer {
-    public final int MAX_VALUE_OF_COLOR = 256;
 
+    public final int MAX_VALUE_OF_COLOR = 256;
     public int BITS_FOR_COLOR;
+    int numberOfIntervals;
+    int step;
 
 
     public UniformQuantizer(int bitsForColor) {
         BITS_FOR_COLOR = bitsForColor;
+        numberOfIntervals = (int) Math.pow(2, BITS_FOR_COLOR);
+        step = 2 * MAX_VALUE_OF_COLOR / numberOfIntervals;
     }
 
     /**
@@ -22,7 +26,6 @@ public class UniformQuantizer {
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
 //                System.err.println("row = " + row + "   col = " + column);
-
                 Pixel oldPixel = image[column][row];
                 int compressedRed = colorQuantization(oldPixel.getRed(), numberOfIntervals, step);
                 int compressedGreen = colorQuantization(oldPixel.getGreen(), numberOfIntervals, step);
@@ -45,6 +48,19 @@ public class UniformQuantizer {
             midpointOfInterval += step;
         }
         return midpointOfInterval;
+    }
+
+    public int quantizeDifferent(int diff) {
+
+        int interval = 0;
+
+        for (int i = -MAX_VALUE_OF_COLOR; i < MAX_VALUE_OF_COLOR; i += step) {
+            if (diff >= i && diff < i + step) {
+                return interval;
+            }
+            interval++;
+        }
+        return interval;
     }
 
 
