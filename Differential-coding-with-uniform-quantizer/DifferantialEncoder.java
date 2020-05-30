@@ -22,13 +22,13 @@ public class DifferantialEncoder {
         StringBuilder encodedImage = new StringBuilder();
         Pixel[][] differences = getSequenceOfDifferences();
 
-        int width = differences.length;
-        int height = differences[0].length;
+        int height = differences.length;
+        int width = differences[0].length;
 
         String firstLine = k + " " + width + " " + height + "\n";
 
-        for (int column = 0; column < height; column++) {
-            for (int row = 0; row < width; row++) {
+        for (int column = 0; column < width; column++) {
+            for (int row = 0; row < height; row++) {
 
                 Pixel actualPixel = differences[row][column];
 
@@ -40,7 +40,6 @@ public class DifferantialEncoder {
                 encodedImage.append(intervalToBinary(greenInterval));
                 encodedImage.append(intervalToBinary(blueInterval));
             }
-//            encodedImage.append("\n");
         }
         writeToFile(firstLine, encodedImage);
     }
@@ -49,21 +48,21 @@ public class DifferantialEncoder {
     public Pixel[][] getSequenceOfDifferences() {
         Predictions predictions = new Predictions(fileName);
         Pixel[][] originImage = predictions.pixels;     //read origin image
-        Pixel[][] differences = predictions.getImageOfPredictions();     //read image prediction W
+        Pixel[][] predictionsArr = predictions.getImageOfPredictions();     //read image prediction W
 
-        Pixel[][] quantizedPredictions = uniformQuantizer.imageQuantization(differences);   //and quantize it
+        Pixel[][] quantizedPredictions = uniformQuantizer.imageQuantization(predictionsArr);   //and quantize it
 
         //calculate differences
-        int width = originImage.length;
-        int height = originImage[0].length;
-        Pixel[][] newImage = new Pixel[width][height];
+        int height = originImage.length;
+        int width = originImage[0].length;
+        Pixel[][] differences = new Pixel[height][width];
 
-        for (int row = 0; row < width; row++) {
-            for (int column = 0; column < height; column++) {
-                newImage[row][column] = Pixel.minus(originImage[row][column], quantizedPredictions[row][column]);
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                differences[row][column] = Pixel.minus(originImage[row][column], quantizedPredictions[row][column]);
             }
         }
-        return newImage;
+        return differences;
     }
 
 
@@ -74,12 +73,11 @@ public class DifferantialEncoder {
     }
 
     /**
-     *
      * @param firstLine 3 values split by space:
      *                  - parameter k (bits for color)
      *                  - width
      *                  - height
-     * @param output encoded image (one line)
+     * @param output    encoded image (one line)
      */
     public void writeToFile(String firstLine, StringBuilder output) {
 

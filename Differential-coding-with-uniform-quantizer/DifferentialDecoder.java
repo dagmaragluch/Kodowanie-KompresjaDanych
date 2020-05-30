@@ -10,6 +10,7 @@ public class DifferentialDecoder {
     int height;
     String image;
     UniformQuantizer quantizer;
+    public final Pixel BLACK = new Pixel(0, 0, 0);
 
     DifferentialDecoder() throws IOException {
         readFile();
@@ -20,14 +21,17 @@ public class DifferentialDecoder {
     public static void main(String[] args) throws IOException {
         System.out.println("Decode");
         DifferentialDecoder decoder = new DifferentialDecoder();
-        Pixel[][] diff = decoder.readDifferencesSequence();
 
-//        Pixel p = decoder.binToPixel("100000111");
-//        System.out.println(p);
+        decoder.decode();
 
-        System.out.println(diff);
+    }
 
 
+    public void decode() {
+
+        Pixel[][] differences = readDifferencesSequence();
+        Pixel[][] newImage = decodeImage(differences);
+        System.out.println(newImage);
     }
 
 
@@ -44,16 +48,15 @@ public class DifferentialDecoder {
     }
 
 
-    public Pixel[][] readDifferencesSequence() throws IOException {
+    public Pixel[][] readDifferencesSequence() {
 
         Pixel[][] differences = new Pixel[height][width];
         int pixelLength = 3 * k;
 
         int i = 0;
-        for (int column = 0; column < width; column++) {
-            for (int row = 0; row < height; row++) {
 
-//                Pixel actualPixel = differences[row][column];
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
 
                 System.err.println("row = " + row + "  col = " + column);
                 String str = image.substring(i, i + pixelLength);
@@ -62,8 +65,6 @@ public class DifferentialDecoder {
 
             }
         }
-
-
         return differences;
     }
 
@@ -76,17 +77,31 @@ public class DifferentialDecoder {
         return new Pixel(red, green, blue, true);
     }
 
-    public void parseLine(String line) {
 
-        int i = 0;
-        while (i < line.length()) {
-            String str = line.substring(i, i + (3 * k));
+    public Pixel[][] decodeImage(Pixel[][] differences) {
+        Pixel[][] decodedImage = new Pixel[height][width];
+        Pixel pixelToAdd = BLACK;
 
+//        System.err.println("*******************");
+//        System.err.println("width (columns) = " + width);
+//        System.err.println("height (rows) = " + height);
+
+        System.err.println();
+
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+
+                if (column == 0) {
+                    pixelToAdd = BLACK;
+                } else {
+                    pixelToAdd = differences[row][column - 1];
+                }
+//                System.err.println("row = " + row + "  col = " + column);
+                decodedImage[row][column] = Pixel.plus(differences[row][column], pixelToAdd);
+            }
         }
 
-
-//        for (int i = 0; i < line.length(); i+=(3*k)) {
-//        }
+        return decodedImage;
     }
 
 

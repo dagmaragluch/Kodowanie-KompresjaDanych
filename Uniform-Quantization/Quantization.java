@@ -32,8 +32,8 @@ public class Quantization {
 
     private void initValues(int bitsForRed, int bitsForGreen, int bitsForBlue) {
         pixels = converterTGA.getPixels();
-        width = pixels.length;
-        height = pixels[0].length;
+        height = pixels.length;
+        width = pixels[0].length;
 
         RED_BITS = bitsForRed;
         GREEN_BITS = bitsForGreen;
@@ -46,18 +46,18 @@ public class Quantization {
      */
     public Pixel[][] imageQuantization() {
 
-        Pixel[][] newImage = new Pixel[width][height];
+        Pixel[][] newImage = new Pixel[height][width];
 
-        for (int row = 0; row < height; row++) {
-            for (int column = 0; column < width; column++) {
+        for (int column = 0; column < width; column++) {
+            for (int row = 0; row < height; row++) {
 
-                Pixel oldPixel = pixels[column][row];
+                Pixel oldPixel = pixels[row][column];
                 int compressedRed = colorQuantization(oldPixel.getRed(), RED_BITS);
                 int compressedGreen = colorQuantization(oldPixel.getGreen(), GREEN_BITS);
                 int compressedBlue = colorQuantization(oldPixel.getBlue(), BLUE_BITS);
                 Pixel compressedPixel = new Pixel(compressedRed, compressedGreen, compressedBlue);
 
-                newImage[column][row] = compressedPixel;
+                newImage[row][column] = compressedPixel;
             }
         }
         return newImage;
@@ -99,13 +99,13 @@ public class Quantization {
         //mse
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                diffRed = oldImage[column][row].getRed() - newImage[column][row].getRed();
+                diffRed = oldImage[row][column].getRed() - newImage[row][column].getRed();
                 sumRed = sumRed + diffRed * diffRed;
 
-                diffGreen = oldImage[column][row].getGreen() - newImage[column][row].getGreen();
+                diffGreen = oldImage[row][column].getGreen() - newImage[row][column].getGreen();
                 sumGreen = sumGreen + diffGreen * diffGreen;
 
-                diffBlue = oldImage[column][row].getBlue() - newImage[column][row].getBlue();
+                diffBlue = oldImage[row][column].getBlue() - newImage[row][column].getBlue();
                 sumBlue = sumBlue + diffBlue * diffBlue;
 
                 diffAll = diffRed * diffRed + diffGreen * diffGreen + diffBlue * diffBlue;
@@ -131,13 +131,13 @@ public class Quantization {
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                temp = newImage[column][row].getRed();
+                temp = newImage[row][column].getRed();
                 sumRed = sumRed + temp * temp;
 
-                temp = newImage[column][row].getGreen();
+                temp = newImage[row][column].getGreen();
                 sumGreen = sumGreen + temp * temp;
 
-                temp = newImage[column][row].getBlue();
+                temp = newImage[row][column].getBlue();
                 sumBlue = sumBlue + temp * temp;
             }
         }

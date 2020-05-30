@@ -57,16 +57,16 @@ public class ConverterTGA {
         int[] pixels = new int[n];
         int idx = n - 1;
 
-        Pixel[][] pixels2 = new Pixel[width][height];
+        Pixel[][] pixels2 = new Pixel[height][width];
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < height; i++) {  //rows
+            for (int j = 0; j < width; j++) {       //columns
                 int b = read(buf);
                 int g = read(buf);
                 int r = read(buf);
                 pixels[idx] = (r << 16) | (g << 8) | b;
                 idx--;
-                pixels2[j][i] = new Pixel(r, g, b);
+                pixels2[i][j] = new Pixel(r, g, b);
 
             }
         }
@@ -84,23 +84,23 @@ public class ConverterTGA {
      * than write it as Pixels into two dimension array;
      * location of pixel is marked by row and column numbers - as they were in image
      */
-    public static Pixel[][] getPixel2DArray(BufferedImage img) {
-        int[] pixelsInt = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
-
-        int numberOfColumns = img.getWidth();
-        int numberOfRows = img.getHeight();
-
-        Pixel[][] pixels = new Pixel[numberOfColumns][numberOfRows];
-
-        int i = 0;
-        for (int row = 0; row < numberOfColumns; row++) {
-            for (int column = 0; column < numberOfRows; column++) {
-                pixels[row][column] = convertIntegerToColor(pixelsInt[i]);
-                i++;
-            }
-        }
-        return pixels;
-    }
+//    public static Pixel[][] getPixel2DArray(BufferedImage img) {
+//        int[] pixelsInt = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+//
+//        int numberOfColumns = img.getWidth();
+//        int numberOfRows = img.getHeight();
+//
+//        Pixel[][] pixels = new Pixel[numberOfColumns][numberOfRows];
+//
+//        int i = 0;
+//        for (int row = 0; row < numberOfColumns; row++) {
+//            for (int column = 0; column < numberOfRows; column++) {
+//                pixels[row][column] = convertIntegerToColor(pixelsInt[i]);
+//                i++;
+//            }
+//        }
+//        return pixels;
+//    }
 
     /**
      * Convert integer value first to binary string, than to Pixel (color RGB)
@@ -109,20 +109,20 @@ public class ConverterTGA {
      * 2nd byte: value of green
      * 3th byte: value of blue
      */
-    public static Pixel convertIntegerToColor(int number) {
-
-        String binaryString = Integer.toBinaryString(number);
-
-        while (binaryString.length() < 24) {
-            binaryString = "0" + binaryString;
-        }
-
-        int red = Integer.parseInt(binaryString.substring(0, 8), 2);
-        int green = Integer.parseInt(binaryString.substring(8, 16), 2);
-        int blue = Integer.parseInt(binaryString.substring(16, 24), 2);
-
-        return new Pixel(red, green, blue);
-    }
+//    public static Pixel convertIntegerToColor(int number) {
+//
+//        String binaryString = Integer.toBinaryString(number);
+//
+//        while (binaryString.length() < 24) {
+//            binaryString = "0" + binaryString;
+//        }
+//
+//        int red = Integer.parseInt(binaryString.substring(0, 8), 2);
+//        int green = Integer.parseInt(binaryString.substring(8, 16), 2);
+//        int blue = Integer.parseInt(binaryString.substring(16, 24), 2);
+//
+//        return new Pixel(red, green, blue);
+//    }
 
     public static int convertColorToInteger(Pixel pixel) {
 
@@ -144,16 +144,16 @@ public class ConverterTGA {
 
     public static BufferedImage getNewImage(Pixel[][] newPixelsArray) {
 
-        int width = newPixelsArray.length;
-        int height = newPixelsArray[0].length;
+        int height = newPixelsArray.length;
+        int width = newPixelsArray[0].length;
 
         int n = width * height;
         int[] newPixels = new int[n];
         int idx = n - 1;
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                newPixels[idx] = convertColorToInteger(newPixelsArray[j][i]);
+        for (int i = 0; i < height; i++) {      //rows
+            for (int j = 0; j < width; j++) {       //columns
+                newPixels[idx] = convertColorToInteger(newPixelsArray[i][j]);
                 idx--;
             }
         }

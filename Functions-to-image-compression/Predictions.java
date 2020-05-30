@@ -8,8 +8,8 @@ public class Predictions {
     ConverterTGA converterTGA = new ConverterTGA();
     public BufferedImage image;
     public Pixel[][] pixels;
-    public int numberOfColumns;
-    public int numberOfRows;
+    public int width;
+    public int height;
 
 
     public Predictions(String fileName) {
@@ -28,8 +28,8 @@ public class Predictions {
 
     private void initValues() {
         pixels = converterTGA.getPixels();
-        numberOfColumns = pixels.length;
-        numberOfRows = pixels[0].length;
+        height = pixels.length;
+        width = pixels[0].length;
     }
 
     /**
@@ -39,10 +39,10 @@ public class Predictions {
      */
     public Pixel[][] getImageOfPredictions(int methodNumber) {
 
-        Pixel[][] newPixels = new Pixel[numberOfColumns][numberOfRows];
+        Pixel[][] newPixels = new Pixel[height][width];
 
-        for (int row = 0; row < numberOfColumns; row++) {
-            for (int column = 0; column < numberOfRows; column++) {
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
                 //X - X'
                 newPixels[row][column] = Pixel.minus(pixels[row][column],  getPrediction(row, column, methodNumber));
             }
@@ -57,10 +57,10 @@ public class Predictions {
      */
     public Pixel[][] getImageOfPredictions() {
 
-        Pixel[][] newPixels = new Pixel[numberOfColumns][numberOfRows];
+        Pixel[][] newPixels = new Pixel[height][width];
 
-        for (int row = 0; row < numberOfColumns; row++) {
-            for (int column = 0; column < numberOfRows; column++) {
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
                 //X'
                 newPixels[row][column] = getPrediction(row, column, 1);
             }

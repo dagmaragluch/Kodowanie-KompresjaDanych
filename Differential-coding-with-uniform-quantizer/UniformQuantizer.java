@@ -16,23 +16,23 @@ public class UniformQuantizer {
      * @return - compressed, quantized image (values of Pixel - int)
      */
     public Pixel[][] imageQuantization(Pixel[][] image) {
-        int width = image.length;
-        int height = image[0].length;
+        int height = image.length;
+        int width = image[0].length;
 
-        Pixel[][] quantizedImage = new Pixel[width][height];
+        Pixel[][] quantizedImage = new Pixel[height][width];
         int numberOfIntervals = (int) Math.pow(2, BITS_FOR_COLOR);
         int step = MAX_VALUE_OF_COLOR / numberOfIntervals;
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
 //                System.err.println("row = " + row + "   col = " + column);
-                Pixel oldPixel = image[column][row];
+                Pixel oldPixel = image[row][column];
                 int compressedRed = colorQuantization(oldPixel.getRed(), numberOfIntervals, step);
                 int compressedGreen = colorQuantization(oldPixel.getGreen(), numberOfIntervals, step);
                 int compressedBlue = colorQuantization(oldPixel.getBlue(), numberOfIntervals, step);
                 Pixel compressedPixel = new Pixel(compressedRed, compressedGreen, compressedBlue);
 
-                quantizedImage[column][row] = compressedPixel;
+                quantizedImage[row][column] = compressedPixel;
             }
         }
         return quantizedImage;
@@ -51,7 +51,6 @@ public class UniformQuantizer {
     }
 
     public int quantizeDifferent(int diff) {
-
         int interval = 0;
 
         for (int i = -MAX_VALUE_OF_COLOR; i < MAX_VALUE_OF_COLOR; i += step) {
