@@ -14,14 +14,7 @@ public class DifferantialEncoder {
 
     public static void main(String[] args) {
         DifferantialEncoder differantialEncoder = new DifferantialEncoder();
-//        Pixel[][] diff = differantialEncoder.getSequenceOfDifferences();
-//
-//        Pixel p = new Pixel(2, 1, 7);
-//        System.out.println(differantialEncoder.format);
-//        differantialEncoder.pixelToBinary(p);
-
         differantialEncoder.encode();
-
     }
 
 
@@ -31,6 +24,8 @@ public class DifferantialEncoder {
 
         int width = differences.length;
         int height = differences[0].length;
+
+        String firstLine = k + " " + width + " " + height + "\n";
 
         for (int column = 0; column < height; column++) {
             for (int row = 0; row < width; row++) {
@@ -43,11 +38,11 @@ public class DifferantialEncoder {
 
                 encodedImage.append(intervalToBinary(redInterval));
                 encodedImage.append(intervalToBinary(greenInterval));
-                encodedImage.append(intervalToBinary(blueInterval) + ";");
+                encodedImage.append(intervalToBinary(blueInterval));
             }
-            encodedImage.append("\n");
+//            encodedImage.append("\n");
         }
-        writeToFile(encodedImage);
+        writeToFile(firstLine, encodedImage);
     }
 
 
@@ -72,30 +67,21 @@ public class DifferantialEncoder {
     }
 
 
-    public String pixelToBinary(Pixel pixel) {
-
-        String red = Integer.toBinaryString(pixel.getRed());
-        red = String.format(format, Integer.parseInt(red));
-        String green = Integer.toBinaryString(pixel.getGreen());
-        green = String.format(format, Integer.parseInt(green));
-        String blue = Integer.toBinaryString(pixel.getBlue());
-        blue = String.format(format, Integer.parseInt(blue));
-
-//        System.out.println(red + green + blue);
-        return red + green + blue;
-    }
-
-
     public String intervalToBinary(int interval) {
         String intervalStr = Integer.toBinaryString(interval);
         intervalStr = String.format(format, Integer.parseInt(intervalStr));
         return intervalStr;
     }
 
-
-    public void writeToFile(StringBuilder output) {
-
-        String firstLine = k + "\n";
+    /**
+     *
+     * @param firstLine 3 values split by space:
+     *                  - parameter k (bits for color)
+     *                  - width
+     *                  - height
+     * @param output encoded image (one line)
+     */
+    public void writeToFile(String firstLine, StringBuilder output) {
 
         try {
             File myObj = new File("encoded-image.txt");

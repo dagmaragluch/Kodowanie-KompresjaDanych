@@ -6,10 +6,13 @@ public class DifferentialDecoder {
 
     String fileName = "C:\\Users\\gluch\\Desktop\\kkd\\Kodowanie-KompresjaDanych\\encoded-image.txt";
     int k;
+    int width;
+    int height;
+    String image;
     UniformQuantizer quantizer;
 
     DifferentialDecoder() throws IOException {
-        k = readParameterK();
+        readFile();
         quantizer = new UniformQuantizer(k);
     }
 
@@ -17,31 +20,51 @@ public class DifferentialDecoder {
     public static void main(String[] args) throws IOException {
         System.out.println("Decode");
         DifferentialDecoder decoder = new DifferentialDecoder();
-//        decoder.readDifferencesSequence();
+        Pixel[][] diff = decoder.readDifferencesSequence();
 
-        Pixel p = decoder.binToPixel("100100100");
-        System.out.println(p);
+//        Pixel p = decoder.binToPixel("100000111");
+//        System.out.println(p);
+
+        System.out.println(diff);
 
 
     }
 
 
-    public int readParameterK() throws IOException {
+    public void readFile() throws IOException {
         BufferedReader brTest = new BufferedReader(new FileReader(fileName));
-        String firstLine = brTest.readLine();
-//        System.out.println("Firstline is : " + firstLine);
+        String[] strings = brTest.readLine().split(" ");
 
-        return Integer.parseInt(firstLine);
+        k = Integer.parseInt(strings[0]);
+        width = Integer.parseInt(strings[1]);
+        height = Integer.parseInt(strings[2]);
+
+        image = brTest.readLine();
+//        System.err.println(image.length());
     }
 
 
     public Pixel[][] readDifferencesSequence() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
+
+        Pixel[][] differences = new Pixel[height][width];
+        int pixelLength = 3 * k;
+
+        int i = 0;
+        for (int column = 0; column < width; column++) {
+            for (int row = 0; row < height; row++) {
+
+//                Pixel actualPixel = differences[row][column];
+
+                System.err.println("row = " + row + "  col = " + column);
+                String str = image.substring(i, i + pixelLength);
+                differences[row][column] = binToPixel(str);
+                i += pixelLength;
+
+            }
         }
-        return null;
+
+
+        return differences;
     }
 
 
@@ -53,7 +76,18 @@ public class DifferentialDecoder {
         return new Pixel(red, green, blue, true);
     }
 
-//    public void calculateNewImage(){}
+    public void parseLine(String line) {
+
+        int i = 0;
+        while (i < line.length()) {
+            String str = line.substring(i, i + (3 * k));
+
+        }
+
+
+//        for (int i = 0; i < line.length(); i+=(3*k)) {
+//        }
+    }
 
 
 }
