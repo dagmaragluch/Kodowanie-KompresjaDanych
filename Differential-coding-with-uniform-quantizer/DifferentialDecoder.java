@@ -15,9 +15,9 @@ public class DifferentialDecoder {
     UniformQuantizer quantizer;
 
     DifferentialDecoder(String encodedFile) throws IOException {
+        fileName = encodedFile;
         readFile();
         quantizer = new UniformQuantizer(k);
-        fileName = encodedFile;
     }
 
 
@@ -95,6 +95,7 @@ public class DifferentialDecoder {
 
 
     public Pixel binToPixel(String bin) {
+//        System.err.println(bin.substring(0, k));
         int red = quantizer.numberOfIntervalToMidpoint(bin.substring(0, k));
         int green = quantizer.numberOfIntervalToMidpoint(bin.substring(k, 2 * k));
         int blue = quantizer.numberOfIntervalToMidpoint(bin.substring(2 * k));

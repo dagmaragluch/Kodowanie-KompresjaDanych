@@ -28,8 +28,8 @@ public class DifferentialEncoder {
         if (bitsForColor < 1 || bitsForColor > 7)
             throw new IllegalArgumentException("Value of bits must be in range [1, 7]");
 
-        DifferentialEncoder differentialEncoder = new DifferentialEncoder(inputFileName, bitsForColor);
-        differentialEncoder.encode();
+        DifferentialEncoder encoder = new DifferentialEncoder(inputFileName, bitsForColor);
+        encoder.encode();
     }
 
 
