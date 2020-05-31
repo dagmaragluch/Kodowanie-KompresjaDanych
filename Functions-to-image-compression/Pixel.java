@@ -54,6 +54,16 @@ public class Pixel {
         return new Pixel(r, g, b, true);
     }
 
+
+    public static Pixel addModulo256(Pixel p1, Pixel p2) {
+        int r = (p1.getRed() + p2.getRed()) % 256;
+        int g = (p1.getGreen() + p2.getGreen()) % 256;
+        int b = (p1.getBlue() + p2.getBlue()) % 256;
+
+        return new Pixel(r, g, b);
+    }
+
+
     public static Pixel minus(Pixel p1, Pixel p2) {
         int r = p1.getRed() - p2.getRed();
         int g = p1.getGreen() - p2.getGreen();
@@ -100,6 +110,10 @@ public class Pixel {
                 return p1.getBlue() == p2.getBlue();
 
         return false;
+    }
+
+    public String toString(){
+        return "r:  " + this.red + "   g:  " + this.green + "   b:  " + this.blue;
     }
 
 

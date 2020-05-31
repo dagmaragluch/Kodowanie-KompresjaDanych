@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class DifferantialEncoder {
 
-    int k = 3;
+    int k = 1;
     String fileName = "C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga";
 
     String format = "%0" + k + "d";
@@ -27,8 +27,9 @@ public class DifferantialEncoder {
 
         String firstLine = k + " " + width + " " + height + "\n";
 
-        for (int column = 0; column < width; column++) {
-            for (int row = 0; row < height; row++) {
+
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
 
                 Pixel actualPixel = differences[row][column];
 
@@ -50,7 +51,9 @@ public class DifferantialEncoder {
         Pixel[][] originImage = predictions.pixels;     //read origin image
         Pixel[][] predictionsArr = predictions.getImageOfPredictions();     //read image prediction W
 
-        Pixel[][] quantizedPredictions = uniformQuantizer.imageQuantization(predictionsArr);   //and quantize it
+//        originImage = uniformQuantizer.imageQuantization(originImage);  // ???
+
+        predictionsArr = uniformQuantizer.imageQuantization(predictionsArr);   //and quantize it
 
         //calculate differences
         int height = originImage.length;
@@ -59,7 +62,7 @@ public class DifferantialEncoder {
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                differences[row][column] = Pixel.minus(originImage[row][column], quantizedPredictions[row][column]);
+                differences[row][column] = Pixel.minus(originImage[row][column], predictionsArr[row][column]);
             }
         }
         return differences;

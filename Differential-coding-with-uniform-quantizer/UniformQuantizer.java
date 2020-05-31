@@ -9,7 +9,7 @@ public class UniformQuantizer {
     public UniformQuantizer(int bitsForColor) {
         BITS_FOR_COLOR = bitsForColor;
         numberOfIntervals = (int) Math.pow(2, BITS_FOR_COLOR);
-        step = 2 * MAX_VALUE_OF_COLOR / numberOfIntervals;
+        step = MAX_VALUE_OF_COLOR / numberOfIntervals;
     }
 
     /**
@@ -53,7 +53,12 @@ public class UniformQuantizer {
     public int quantizeDifferent(int diff) {
         int interval = 0;
 
-        for (int i = -MAX_VALUE_OF_COLOR; i < MAX_VALUE_OF_COLOR; i += step) {
+//        diff = diff % MAX_VALUE_OF_COLOR;
+
+        if(diff < 0)                // diff % 256 fo negative number
+            diff = MAX_VALUE_OF_COLOR + diff;
+
+        for (int i = 0; i < MAX_VALUE_OF_COLOR; i += step) {
             if (diff >= i && diff < i + step) {
                 return interval;
             }
@@ -66,7 +71,7 @@ public class UniformQuantizer {
     public int numberOfIntervalToMidpoint(String bin) {
 
         int interval = Integer.parseInt(bin, 2);
-        int startValue = -MAX_VALUE_OF_COLOR + (step / 2);
+        int startValue = step / 2;
 
         return (interval * step) + startValue;
     }
