@@ -1,35 +1,48 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class DifferentialDecoder {
 
-    String fileName = "C:\\Users\\gluch\\Desktop\\kkd\\Kodowanie-KompresjaDanych\\encoded-image.txt";
+    String fileName;
     int k;
     int width;
     int height;
     String image;
     UniformQuantizer quantizer;
 
-    DifferentialDecoder() throws IOException {
+    DifferentialDecoder(String encodedFile) throws IOException {
         readFile();
         quantizer = new UniformQuantizer(k);
+        fileName = encodedFile;
     }
 
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Decode");
-        DifferentialDecoder decoder = new DifferentialDecoder();
+
+        if (args.length < 1) throw new IllegalArgumentException("Required 1 argument!");
+
+        String encodedFileName = args[0];
+        DifferentialDecoder decoder = new DifferentialDecoder(encodedFileName);
 
         decoder.decode();
-
     }
 
 
-    public void decode() {
+    public void decode() throws IOException {
 
         Pixel[][] differences = readDifferencesSequence();
         Pixel[][] newImage = decodeImage(differences);
+
+        BufferedImage img = ConverterTGA.getNewImage(newImage);
+
+        String outputFileName = "decoded-image.tga";
+
+        File outputFile = new File(outputFileName);
+        ImageIO.write(img, "TGA", outputFile);
 
     }
 

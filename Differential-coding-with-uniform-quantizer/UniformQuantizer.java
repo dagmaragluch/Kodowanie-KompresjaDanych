@@ -25,7 +25,7 @@ public class UniformQuantizer {
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-//                System.err.println("row = " + row + "   col = " + column);
+
                 Pixel oldPixel = image[row][column];
                 int compressedRed = colorQuantization(oldPixel.getRed(), numberOfIntervals, step);
                 int compressedGreen = colorQuantization(oldPixel.getGreen(), numberOfIntervals, step);
@@ -52,10 +52,9 @@ public class UniformQuantizer {
 
     public int quantizeDifferent(int diff) {
         int interval = 0;
-
 //        diff = diff % MAX_VALUE_OF_COLOR;
 
-        if(diff < 0)                // diff % 256 fo negative number
+        if(diff < 0)                // diff % 256 for negative number
             diff = MAX_VALUE_OF_COLOR + diff;
 
         for (int i = 0; i < MAX_VALUE_OF_COLOR; i += step) {

@@ -2,19 +2,34 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class DifferantialEncoder {
+public class DifferentialEncoder {
 
-    int k = 1;
-    String fileName = "C:\\Users\\gluch\\Desktop\\kkd\\testy4\\example0.tga";
+    int k;
+    String fileName;
+    String format;
+    UniformQuantizer uniformQuantizer;
 
-    String format = "%0" + k + "d";
 
-    UniformQuantizer uniformQuantizer = new UniformQuantizer(k);
+    DifferentialEncoder(String inputFileName, int bitsForColor) {
+        fileName = inputFileName;
+        k = bitsForColor;
+        format = "%0" + k + "d";
+        uniformQuantizer = new UniformQuantizer(k);
+    }
 
 
     public static void main(String[] args) {
-        DifferantialEncoder differantialEncoder = new DifferantialEncoder();
-        differantialEncoder.encode();
+
+        if (args.length < 2) throw new IllegalArgumentException("Required 2 arguments!");
+
+        String inputFileName = args[0];
+        int bitsForColor = Integer.parseInt(args[1]);
+
+        if (bitsForColor < 1 || bitsForColor > 7)
+            throw new IllegalArgumentException("Value of bits must be in range [1, 7]");
+
+        DifferentialEncoder differentialEncoder = new DifferentialEncoder(inputFileName, bitsForColor);
+        differentialEncoder.encode();
     }
 
 
@@ -51,7 +66,6 @@ public class DifferantialEncoder {
         Pixel[][] originImage = predictions.pixels;     //read origin image
         Pixel[][] predictionsArr = predictions.getImageOfPredictions();     //read image prediction W
 
-//        originImage = uniformQuantizer.imageQuantization(originImage);  // ???
 
         predictionsArr = uniformQuantizer.imageQuantization(predictionsArr);   //and quantize it
 
