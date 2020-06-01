@@ -60,8 +60,8 @@ public class QuantizerTest {
     @Test
     public void numberOfIntervalToMidpointTest(){
 
-        int result1 = quantizer.numberOfIntervalToMidpoint("0");
-        int result2 = quantizer.numberOfIntervalToMidpoint("1");
+        int result1 = quantizer.intervalNumberToMidpoint("0");
+        int result2 = quantizer.intervalNumberToMidpoint("1");
 
         assertEquals(64, result1);
         assertEquals(192, result2);
@@ -70,7 +70,7 @@ public class QuantizerTest {
     @Test
     public void smallTest(){
         String bin = "110";
-        int red = quantizer.numberOfIntervalToMidpoint(bin.substring(0, k));
+        int red = quantizer.intervalNumberToMidpoint(bin.substring(0, k));
 
         assertEquals(192, red);
     }

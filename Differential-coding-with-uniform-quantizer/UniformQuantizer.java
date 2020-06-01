@@ -20,8 +20,6 @@ public class UniformQuantizer {
         int width = image[0].length;
 
         Pixel[][] quantizedImage = new Pixel[height][width];
-        int numberOfIntervals = (int) Math.pow(2, BITS_FOR_COLOR);
-        int step = MAX_VALUE_OF_COLOR / numberOfIntervals;
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
@@ -50,11 +48,14 @@ public class UniformQuantizer {
         return midpointOfInterval;
     }
 
+    /**
+     * @param diff - different modulo 256 (!)
+     * @return interval number
+     */
     public int quantizeDifferent(int diff) {
         int interval = 0;
-//        diff = diff % MAX_VALUE_OF_COLOR;
 
-        if(diff < 0)                // diff % 256 for negative number
+        if (diff < 0)         // diff % 256 for negative number
             diff = MAX_VALUE_OF_COLOR + diff;
 
         for (int i = 0; i < MAX_VALUE_OF_COLOR; i += step) {
@@ -66,8 +67,11 @@ public class UniformQuantizer {
         return interval;
     }
 
-
-    public int numberOfIntervalToMidpoint(String bin) {
+    /**
+     * @param bin interval number (range: [0..2^k]) as binary string
+     * @return midpoint of interval (int)
+     */
+    public int intervalNumberToMidpoint(String bin) {
 
         int interval = Integer.parseInt(bin, 2);
         int startValue = step / 2;

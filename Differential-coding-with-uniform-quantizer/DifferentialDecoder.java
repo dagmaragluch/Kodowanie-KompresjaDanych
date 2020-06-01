@@ -13,6 +13,7 @@ public class DifferentialDecoder {
     int height;
     String image;
     UniformQuantizer quantizer;
+    Pixel[][] newImage;
 
     DifferentialDecoder(String encodedFile) throws IOException {
         fileName = encodedFile;
@@ -31,11 +32,13 @@ public class DifferentialDecoder {
         decoder.decode();
     }
 
-
+    /**
+     * decode image and save it to file
+     */
     public void decode() throws IOException {
 
         Pixel[][] differences = readDifferencesSequence();
-        Pixel[][] newImage = decodeImage(differences);
+        newImage = decodeImage(differences);
 
         BufferedImage img = ConverterTGA.getNewImage(newImage);
 
@@ -43,10 +46,12 @@ public class DifferentialDecoder {
 
         File outputFile = new File(outputFileName);
         ImageIO.write(img, "TGA", outputFile);
-
     }
 
-
+    /**
+     * read txt file with decoded image
+     * and set parameters: k, width, height
+     */
     public void readFile() throws IOException {
         BufferedReader brTest = new BufferedReader(new FileReader(fileName));
         String[] strings = brTest.readLine().split(" ");
@@ -57,7 +62,10 @@ public class DifferentialDecoder {
         image = brTest.readLine();
     }
 
-
+    /**
+     * convert encoded image (long binary string) to
+     * differences sequence as 2D pixel array
+     */
     public Pixel[][] readDifferencesSequence() {
 
         Pixel[][] differences = new Pixel[height][width];
@@ -76,7 +84,11 @@ public class DifferentialDecoder {
         return differences;
     }
 
-
+    /**
+     * decoded image:
+     * - values from first column are get literally
+     * - next values are calculated using adding modulo 256
+     */
     public Pixel[][] decodeImage(Pixel[][] differences) {
         Pixel[][] decodedImage = new Pixel[height][width];
 
@@ -93,12 +105,15 @@ public class DifferentialDecoder {
         return decodedImage;
     }
 
-
+    /**
+     * @param bin - binary string describing pixel
+     * @return pixel with differences
+     */
     public Pixel binToPixel(String bin) {
-//        System.err.println(bin.substring(0, k));
-        int red = quantizer.numberOfIntervalToMidpoint(bin.substring(0, k));
-        int green = quantizer.numberOfIntervalToMidpoint(bin.substring(k, 2 * k));
-        int blue = quantizer.numberOfIntervalToMidpoint(bin.substring(2 * k));
+
+        int red = quantizer.intervalNumberToMidpoint(bin.substring(0, k));
+        int green = quantizer.intervalNumberToMidpoint(bin.substring(k, 2 * k));
+        int blue = quantizer.intervalNumberToMidpoint(bin.substring(2 * k));
 
         return new Pixel(red, green, blue, true);
     }

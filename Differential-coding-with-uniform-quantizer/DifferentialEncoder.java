@@ -6,7 +6,7 @@ public class DifferentialEncoder {
 
     int k;
     String fileName;
-    String format;
+    String format;    //to control string length by write it to file
     UniformQuantizer uniformQuantizer;
 
 
@@ -32,7 +32,10 @@ public class DifferentialEncoder {
         encoder.encode();
     }
 
-
+    /**
+     * quantize differential sequence
+     * and write it to file
+     */
     public void encode() {
         StringBuilder encodedImage = new StringBuilder();
         Pixel[][] differences = getSequenceOfDifferences();
@@ -41,7 +44,6 @@ public class DifferentialEncoder {
         int width = differences[0].length;
 
         String firstLine = k + " " + width + " " + height + "\n";
-
 
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
@@ -66,7 +68,6 @@ public class DifferentialEncoder {
         Pixel[][] originImage = predictions.pixels;     //read origin image
         Pixel[][] predictionsArr = predictions.getImageOfPredictions();     //read image prediction W
 
-
         predictionsArr = uniformQuantizer.imageQuantization(predictionsArr);   //and quantize it
 
         //calculate differences
@@ -83,6 +84,12 @@ public class DifferentialEncoder {
     }
 
 
+    /**
+     * @param interval - interval number
+     * @return - interval as binary string (length = k)
+     * range: [0, 256)
+     * first interval number is 0
+     */
     public String intervalToBinary(int interval) {
         String intervalStr = Integer.toBinaryString(interval);
         intervalStr = String.format(format, Integer.parseInt(intervalStr));
@@ -115,7 +122,6 @@ public class DifferentialEncoder {
             System.out.println("An error occurred");
             e.printStackTrace();
         }
-
     }
 
 
