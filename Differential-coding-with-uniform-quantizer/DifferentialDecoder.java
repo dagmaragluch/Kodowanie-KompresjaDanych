@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class DifferentialDecoder {
 
-    String fileName;
+    String fileName = "encoded-image.txt";
     int k;
     int width;
     int height;
@@ -15,20 +15,14 @@ public class DifferentialDecoder {
     UniformQuantizer quantizer;
     Pixel[][] newImage;
 
-    DifferentialDecoder(String encodedFile) throws IOException {
-        fileName = encodedFile;
+    DifferentialDecoder() throws IOException {
         readFile();
         quantizer = new UniformQuantizer(k);
     }
 
 
     public static void main(String[] args) throws IOException {
-
-        if (args.length < 1) throw new IllegalArgumentException("Required 1 argument!");
-
-        String encodedFileName = args[0];
-        DifferentialDecoder decoder = new DifferentialDecoder(encodedFileName);
-
+        DifferentialDecoder decoder = new DifferentialDecoder();
         decoder.decode();
     }
 

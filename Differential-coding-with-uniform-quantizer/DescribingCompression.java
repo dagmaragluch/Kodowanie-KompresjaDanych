@@ -19,7 +19,7 @@ public class DescribingCompression {
         DifferentialEncoder encoder = new DifferentialEncoder(inputFileName, bitsForColor);
         encoder.encode();
         String encodedFileName = "encoded-image.txt";
-        DifferentialDecoder decoder = new DifferentialDecoder(encodedFileName);
+        DifferentialDecoder decoder = new DifferentialDecoder();
         decoder.decode();
 
         Quantization quantization = new Quantization(inputFileName, 8, 8, 8);

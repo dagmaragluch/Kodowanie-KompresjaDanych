@@ -6,7 +6,7 @@ public class QuantizerTest {
 
     int k = 1;
     UniformQuantizer quantizer = new UniformQuantizer(k);
-    DifferentialDecoder decoder = new DifferentialDecoder("C:\\Users\\gluch\\Desktop\\kkd\\Kodowanie-KompresjaDanych\\encoded-image.txt");
+    DifferentialDecoder decoder = new DifferentialDecoder();
 
     public QuantizerTest() throws IOException {
     }
