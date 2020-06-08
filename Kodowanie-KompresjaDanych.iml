@@ -12,6 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Uniform-Quantization" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Differential-coding-with-uniform-quantizer" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/Hamming-codes" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
