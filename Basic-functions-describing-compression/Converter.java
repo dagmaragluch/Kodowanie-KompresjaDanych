@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,6 +126,18 @@ public class Converter {
 
     public static double log2(double N) {
         return (Math.log(N) / Math.log(2));
+    }
+
+
+    public static String readAllBytes(String filePath) {
+        String content = "";
+
+        try {
+            content = new String(Files.readAllBytes(Paths.get(filePath)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
     }
 
 

@@ -2,8 +2,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HammingEncoder {
+public class Koder {
 
+    public static int[][] G = createMatrixG();
 
     public static void main(String[] args) throws IOException {
 
@@ -19,17 +20,15 @@ public class HammingEncoder {
 
         for (int[] block : blocks) {
             int[] encodedBlock = codeBlock(block);
-            for (int i = 0; i < block.length ; i++) {
+            for (int i = 0; i < block.length; i++) {
                 encodedBlocks.append(encodedBlock[i]);
             }
         }
 
         byte[] bytes = String.valueOf(encodedBlocks).getBytes();
-
         try (FileOutputStream fos = new FileOutputStream(outputFileName)) {
             fos.write(bytes);
         }
-
     }
 
 
@@ -61,7 +60,7 @@ public class HammingEncoder {
 
 
     public static int[][] createMatrixG() {
-        int[][] G = {
+        return new int[][]{
                 new int[]{1, 1, 0, 1},
                 new int[]{1, 0, 1, 1},
                 new int[]{1, 0, 0, 0},
@@ -71,12 +70,9 @@ public class HammingEncoder {
                 new int[]{0, 0, 0, 1},
                 new int[]{1, 1, 1, 0},
         };
-        return G;
     }
 
-
     public static int[] codeBlock(int[] block) {
-        int[][] G = createMatrixG();
         int[] result = new int[8];
 
         for (int i = 0; i < 8; i++) {
