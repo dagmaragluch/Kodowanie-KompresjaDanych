@@ -1,3 +1,4 @@
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -5,22 +6,29 @@ public class HammingEncoder {
 
 
     public static void main(String[] args) throws IOException {
-        String inputFileName = "panda.jpg";
+
+        if (args.length < 2) throw new IllegalArgumentException("Required 2 arguments!");
+
+        String inputFileName = args[0];
+        String outputFileName = args[1];
         Converter converter = new Converter();
         byte[] fileAsBytes = converter.convertFileToByteArray(inputFileName);
 
-        System.out.println(Integer.toBinaryString(fileAsBytes[28]));
-        for (int i = 0; i < 8; i++) {
-            System.out.print(getBit(fileAsBytes[28], i) + " ");
-        }
-
         ArrayList<int[]> blocks = byteArrayToBlocks(fileAsBytes);
-        ArrayList<int[]> encodedBlocks = new ArrayList<>();
+        StringBuilder encodedBlocks = new StringBuilder();
 
         for (int[] block : blocks) {
-            encodedBlocks.add(codeBlock(block));
+            int[] encodedBlock = codeBlock(block);
+            for (int i = 0; i < block.length ; i++) {
+                encodedBlocks.append(encodedBlock[i]);
+            }
         }
 
+        byte[] bytes = String.valueOf(encodedBlocks).getBytes();
+
+        try (FileOutputStream fos = new FileOutputStream(outputFileName)) {
+            fos.write(bytes);
+        }
 
     }
 
@@ -76,11 +84,10 @@ public class HammingEncoder {
                 result[i] += G[i][j] * block[j];
             }
         }
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {   // modulo 2
             result[i] = result[i] % 2;
         }
         return result;
     }
-
 
 }
