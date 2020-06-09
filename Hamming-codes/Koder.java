@@ -32,7 +32,7 @@ public class Koder {
     }
 
 
-    private static int getBit(byte b, int bit) {
+    public static int getBit(byte b, int bit) {
         return ((b & (1 << bit)) != 0) ? 1 : 0;
     }
 
